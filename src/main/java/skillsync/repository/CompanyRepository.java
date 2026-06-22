@@ -54,4 +54,10 @@ public class CompanyRepository extends BaseRepository {
     private Company map(ResultSet resultSet) throws SQLException {
         return new Company(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("industry"), resultSet.getString("website"), resultSet.getBigDecimal("minimum_gpa"));
     }
+
+    public long count() throws SQLException {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM companies"); ResultSet resultSet = statement.executeQuery()) {
+            resultSet.next(); return resultSet.getLong(1);
+        }
+    }
 }

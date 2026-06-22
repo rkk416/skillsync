@@ -38,6 +38,16 @@ public class UserRepository extends BaseRepository {
         }
     }
 
+    public Optional<User> findByEmail(String email) throws SQLException {
+        String sql = "SELECT id, email, password_hash, full_name, role, created_at FROM users WHERE LOWER(email) = LOWER(?)";
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(map(resultSet)) : Optional.empty();
+            }
+        }
+    }
+
     public List<User> findAll() throws SQLException {
         String sql = "SELECT id, email, password_hash, full_name, role, created_at FROM users ORDER BY id";
         List<User> users = new ArrayList<>();

@@ -71,7 +71,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>skillsync.main.SkillSyncApplication</mainClass>
+                    <mainClass>skillsync.main.MainApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

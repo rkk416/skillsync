@@ -10,7 +10,7 @@ public abstract class BaseRepository {
     private final DatabaseConnection databaseConnection;
 
     protected BaseRepository() {
-        this(DatabaseConnection.getInstance());
+        this.databaseConnection = null;
     }
 
     protected BaseRepository(DatabaseConnection databaseConnection) {
@@ -18,6 +18,6 @@ public abstract class BaseRepository {
     }
 
     protected final Connection getConnection() throws SQLException {
-        return databaseConnection.getConnection();
+        return (databaseConnection == null ? DatabaseConnection.getInstance() : databaseConnection).getConnection();
     }
 }

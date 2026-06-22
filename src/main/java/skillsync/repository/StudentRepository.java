@@ -34,6 +34,13 @@ public class StudentRepository extends BaseRepository {
         }
     }
 
+    public Optional<Student> findByUserId(int userId) throws SQLException {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, user_id, university, degree, graduation_year, bio FROM students WHERE user_id = ?")) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) { return resultSet.next() ? Optional.of(map(resultSet)) : Optional.empty(); }
+        }
+    }
+
     public List<Student> findAll() throws SQLException {
         List<Student> students = new ArrayList<>();
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, user_id, university, degree, graduation_year, bio FROM students ORDER BY id"); ResultSet resultSet = statement.executeQuery()) {
