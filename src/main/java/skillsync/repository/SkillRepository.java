@@ -97,7 +97,7 @@ public class SkillRepository extends BaseRepository {
     }
 
     public boolean update(Skill skill) throws SQLException {
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE skills SET name = ?, category = ?, description = ? WHERE id = ?")) {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE skills SET name = ?, category = ?, description = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")) {
             statement.setString(1, skill.getName()); statement.setString(2, skill.getCategory()); statement.setString(3, skill.getDescription()); statement.setInt(4, skill.getId());
             return statement.executeUpdate() == 1;
         }

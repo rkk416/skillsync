@@ -38,7 +38,7 @@ public class CertificationRepository extends BaseRepository {
     }
 
     public boolean update(Certification certification) throws SQLException {
-        String sql = "UPDATE certifications SET student_id = ?, name = ?, issuing_organization = ?, issue_date = ?, expiry_date = ?, credential_url = ? WHERE id = ?";
+        String sql = "UPDATE certifications SET student_id = ?, name = ?, issuing_organization = ?, issue_date = ?, expiry_date = ?, credential_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             bind(statement, certification); statement.setInt(7, certification.getId()); return statement.executeUpdate() == 1;
         }

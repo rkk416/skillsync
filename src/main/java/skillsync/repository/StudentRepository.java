@@ -50,7 +50,7 @@ public class StudentRepository extends BaseRepository {
     }
 
     public boolean update(Student student) throws SQLException {
-        String sql = "UPDATE students SET user_id = ?, university = ?, degree = ?, graduation_year = ?, bio = ? WHERE id = ?";
+        String sql = "UPDATE students SET user_id = ?, university = ?, degree = ?, graduation_year = ?, bio = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, student.getUserId());
             statement.setString(2, student.getUniversity());

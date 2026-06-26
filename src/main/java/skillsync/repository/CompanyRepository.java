@@ -36,7 +36,7 @@ public class CompanyRepository extends BaseRepository {
     }
 
     public boolean update(Company company) throws SQLException {
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE companies SET name = ?, industry = ?, website = ?, minimum_gpa = ? WHERE id = ?")) {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE companies SET name = ?, industry = ?, website = ?, minimum_gpa = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")) {
             bind(statement, company); statement.setInt(5, company.getId()); return statement.executeUpdate() == 1;
         }
     }

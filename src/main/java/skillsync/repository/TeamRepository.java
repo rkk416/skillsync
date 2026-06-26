@@ -75,7 +75,7 @@ public class TeamRepository extends BaseRepository {
     }
 
     public boolean update(Team team) throws SQLException {
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE teams SET name = ?, description = ?, created_by = ?, created_at = ? WHERE id = ?")) {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE teams SET name = ?, description = ?, created_by = ?, created_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")) {
             statement.setString(1, team.getName()); statement.setString(2, team.getDescription()); statement.setInt(3, team.getCreatedBy());
             statement.setTimestamp(4, team.getCreatedAt() == null ? null : Timestamp.valueOf(team.getCreatedAt())); statement.setInt(5, team.getId());
             return statement.executeUpdate() == 1;

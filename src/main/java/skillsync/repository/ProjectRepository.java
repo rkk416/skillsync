@@ -38,7 +38,7 @@ public class ProjectRepository extends BaseRepository {
     }
 
     public boolean update(Project project) throws SQLException {
-        String sql = "UPDATE projects SET owner_student_id = ?, name = ?, description = ?, repository_url = ?, start_date = ?, end_date = ? WHERE id = ?";
+        String sql = "UPDATE projects SET owner_student_id = ?, name = ?, description = ?, repository_url = ?, start_date = ?, end_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             bind(statement, project); statement.setInt(7, project.getId()); return statement.executeUpdate() == 1;
         }

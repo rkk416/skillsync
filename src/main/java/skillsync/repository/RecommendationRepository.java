@@ -40,7 +40,7 @@ public class RecommendationRepository extends BaseRepository {
     }
 
     public boolean update(Recommendation recommendation) throws SQLException {
-        String sql = "UPDATE recommendations SET student_id = ?, recommendation_type = ?, target_id = ?, score = ?, reason = ?, created_at = ? WHERE id = ?";
+        String sql = "UPDATE recommendations SET student_id = ?, recommendation_type = ?, target_id = ?, score = ?, reason = ?, created_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, recommendation.getStudentId()); statement.setString(2, recommendation.getRecommendationType());
             statement.setInt(3, recommendation.getTargetId()); statement.setBigDecimal(4, recommendation.getScore()); statement.setString(5, recommendation.getReason());
