@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -31,6 +32,11 @@ public final class ViewFactory {
 
     public static void error(String message) { alert(Alert.AlertType.ERROR, "Error", message); }
     public static void info(String message) { alert(Alert.AlertType.INFORMATION, "SkillSync", message); }
+    public static boolean confirm(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm"); alert.setHeaderText(null); alert.setContentText(message);
+        return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
+    }
     private static void alert(Alert.AlertType type, String title, String message) { Alert alert = new Alert(type); alert.setTitle(title); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait(); }
     private static void addNav(VBox sidebar, String label, String screen) { Button button = new Button(label); button.setMaxWidth(Double.MAX_VALUE); button.setStyle("-fx-background-color: transparent; -fx-alignment: CENTER-LEFT; -fx-padding: 10;"); button.setOnAction(event -> NavigationManager.getInstance().navigateTo(screen)); sidebar.getChildren().add(button); }
 }

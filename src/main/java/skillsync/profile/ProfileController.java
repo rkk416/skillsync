@@ -25,12 +25,13 @@ public final class ProfileController extends ControllerSupport {
     public List<Skill> loadSkills() { try { return skills.findByStudentId(currentStudentId()); } catch (SQLException e) { throw new ServiceException("Unable to load skills", e); } }
     public List<Certification> loadCertifications() { try { return certifications.findAll().stream().filter(c -> c.getStudentId() == currentStudentId()).toList(); } catch (SQLException e) { throw new ServiceException("Unable to load certifications", e); } }
     public List<Project> loadProjects() { try { return projects.findAll().stream().filter(p -> p.getOwnerStudentId() == currentStudentId()).toList(); } catch (SQLException e) { throw new ServiceException("Unable to load projects", e); } }
-    public void saveProfile(Student student) { execute(() -> service.updateProfile(student)); }
-    public void addSkill(String name, String category) { execute(() -> service.addSkill(currentStudentId(), new Skill(0, name, category, null))); }
-    public void deleteSkill(int skillId) { execute(() -> { try { skills.removeFromStudent(currentStudentId(), skillId); } catch (SQLException e) { throw new ServiceException("Unable to remove skill", e); } }); }
+    public boolean saveProfile(Student student) { return executeBoolean(() -> service.updateProfile(student)); }
+    public boolean addSkill(String name, String category) { return executeBoolean(() -> service.addSkill(currentStudentId(), new Skill(0, name, category, null))); }
+    public boolean updateSkill(Skill skill) { return executeBoolean(() -> service.updateSkill(currentStudentId(), skill)); }
+    public void deleteSkill(int skillId) { execute(() -> service.removeSkill(currentStudentId(), skillId)); }
     public void addCertification(Certification value) { execute(() -> service.addCertification(currentStudentId(), value)); }
-    public void saveCertification(Certification value) { execute(() -> { try { if (value.getId() == 0) service.addCertification(currentStudentId(), value); else certifications.update(value); } catch (SQLException e) { throw new ServiceException("Unable to save certification", e); } }); }
-    public void saveProject(Project value) { execute(() -> { value.setOwnerStudentId(currentStudentId()); try { if (value.getId() == 0) projects.create(value); else projects.update(value); } catch (SQLException e) { throw new ServiceException("Unable to save project", e); } }); }
-    public void deleteCertification(int id) { execute(() -> { try { certifications.deleteById(id); } catch (SQLException e) { throw new ServiceException("Unable to delete certification", e); } }); }
-    public void deleteProject(int id) { execute(() -> { try { projects.deleteById(id); } catch (SQLException e) { throw new ServiceException("Unable to delete project", e); } }); }
+    public boolean saveCertification(Certification value) { return executeBoolean(() -> { if (value.getId() == 0) service.addCertification(currentStudentId(), value); else service.updateCertification(currentStudentId(), value); }); }
+    public boolean saveProject(Project value) { return executeBoolean(() -> { if (value.getId() == 0) service.addProject(currentStudentId(), value); else service.updateProject(currentStudentId(), value); }); }
+    public void deleteCertification(int id) { execute(() -> service.removeCertification(currentStudentId(), id)); }
+    public void deleteProject(int id) { execute(() -> service.removeProject(currentStudentId(), id)); }
 }

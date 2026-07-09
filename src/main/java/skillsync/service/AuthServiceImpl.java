@@ -62,6 +62,10 @@ public class AuthServiceImpl implements AuthService {
             boolean valid;
             try { valid = PasswordHasher.matches(characters, user.getPasswordHash()); } finally { Arrays.fill(characters, '\0'); }
             if (!valid) throw new IllegalArgumentException("Invalid email or password");
+            // Ensure student profile exists for this user (safety check for data consistency)
+            if (studentRepository.findByUserId(user.getId()).isEmpty()) {
+                studentRepository.create(new Student(0, user.getId(), null, null, 0, null));
+            }
             SessionManager.start(user);
             return user;
         } catch (SQLException exception) {

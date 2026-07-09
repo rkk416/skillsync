@@ -18,12 +18,18 @@ public final class DashboardController extends ControllerSupport {
     private final RecommendationService recommendations = new RecommendationServiceImpl();
     private final SkillRepository skills = new SkillRepository();
     private final TeamRepository teams = new TeamRepository();
+    
     public Map<String, Number> metrics() {
         try {
-            int id = currentStudentId(); Map<String, Number> values = new LinkedHashMap<>();
-            values.put("Placement Score", placement.calculatePlacementScore(id)); values.put("Skills Count", skills.findByStudentId(id).size());
+            int id = currentStudentId(); 
+            Map<String, Number> values = new LinkedHashMap<>();
+            values.put("Placement Score", placement.calculatePlacementScore(id)); 
+            values.put("Skills Count", skills.findByStudentId(id).size());
             values.put("Recommendations", recommendations.recommendSkills(id).size() + recommendations.recommendCompanies(id).size() + recommendations.recommendTeammates(id).size());
-            values.put("Team Count", teams.countByStudentId(id)); return values;
-        } catch (SQLException e) { throw new ServiceException("Unable to load dashboard", e); }
+            values.put("Team Count", teams.countByStudentId(id)); 
+            return values;
+        } catch (SQLException e) { 
+            throw new ServiceException("Unable to load dashboard", e); 
+        }
     }
 }

@@ -14,6 +14,19 @@ public abstract class ControllerSupport {
     }
 
     protected void execute(Runnable action) {
-        try { action.run(); } catch (IllegalArgumentException | IllegalStateException | ServiceException exception) { ViewFactory.error(exception.getMessage()); }
+        try { action.run(); }
+        catch (IllegalArgumentException | IllegalStateException | ServiceException exception) {
+            exception.printStackTrace();
+            ViewFactory.error(exception.getMessage());
+        }
+    }
+
+    protected boolean executeBoolean(Runnable action) {
+        try { action.run(); return true; }
+        catch (IllegalArgumentException | IllegalStateException | ServiceException exception) {
+            exception.printStackTrace();
+            ViewFactory.error(exception.getMessage());
+            return false;
+        }
     }
 }
