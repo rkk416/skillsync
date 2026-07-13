@@ -12,8 +12,9 @@ ALTER TABLE companies ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEF
 ALTER TABLE companies ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE recommendations ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE projects
+ADD COLUMN IF NOT EXISTS technology_stack VARCHAR(500);
 
--- TODO: Keep recommendations.target_id generic for compatibility; evaluate typed target references only in a dedicated migration.
 CREATE TABLE IF NOT EXISTS placement_applications (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -82,5 +83,15 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_student_connections_pair ON student_connect
 CREATE INDEX IF NOT EXISTS idx_login_history_user_id ON login_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_logs_student_id ON activity_logs(student_id);
 CREATE INDEX IF NOT EXISTS idx_recommendation_history_student_id ON recommendation_history(student_id);
+
+COMMIT;
+
+BEGIN;
+ALTER TABLE students
+    ADD COLUMN IF NOT EXISTS branch VARCHAR(50);
+ALTER TABLE students
+    ADD COLUMN IF NOT EXISTS cgpa NUMERIC(4, 2) CHECK (cgpa BETWEEN 0 AND 10);
+ALTER TABLE students
+    ALTER COLUMN cgpa TYPE NUMERIC(4, 2);
 
 COMMIT;

@@ -17,6 +17,9 @@ CREATE TABLE students (
     degree VARCHAR(150),
     graduation_year INTEGER CHECK (graduation_year BETWEEN 1900 AND 2200),
     bio VARCHAR(1000),
+    full_name VARCHAR(150),
+    branch VARCHAR(100),
+    cgpa NUMERIC(3,2) CHECK (cgpa BETWEEN 0 AND 10),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -58,6 +61,7 @@ CREATE TABLE projects (
     repository_url VARCHAR(500),
     start_date DATE,
     end_date DATE,
+    technology_stack VARCHAR(300),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT valid_project_dates CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
@@ -109,7 +113,6 @@ CREATE TABLE recommendations (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- TODO: Keep recommendations.target_id generic for compatibility; evaluate typed target references only in a dedicated migration.
 CREATE TABLE placement_applications (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
