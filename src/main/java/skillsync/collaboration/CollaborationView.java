@@ -77,119 +77,12 @@ public final class CollaborationView extends VBox {
         setSpacing(20);
         setPadding(new Insets(10));
 
-        // Create a beautiful custom dark theme CSS for ChoiceBox dropdowns and menus dynamically
-        try {
-            java.io.File tempCss = java.io.File.createTempFile("collaboration_dark", ".css");
-            tempCss.deleteOnExit();
-            try (java.io.FileWriter writer = new java.io.FileWriter(tempCss)) {
-                writer.write(
-                    ".context-menu {\n" +
-                    "    -fx-background-color: #1F2937 !important;\n" +
-                    "    -fx-border-color: #374151 !important;\n" +
-                    "    -fx-border-width: 1px !important;\n" +
-                    "    -fx-border-radius: 8px !important;\n" +
-                    "    -fx-background-radius: 8px !important;\n" +
-                    "    -fx-padding: 4px !important;\n" +
-                    "    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4) !important;\n" +
-                    "}\n" +
-                    ".menu-item {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "    -fx-padding: 6px 12px 6px 12px !important;\n" +
-                    "    -fx-cursor: hand !important;\n" +
-                    "}\n" +
-                    ".menu-item .label {\n" +
-                    "    -fx-text-fill: #F3F4F6 !important;\n" +
-                    "    -fx-font-size: 12px !important;\n" +
-                    "    -fx-font-family: 'Segoe UI' !important;\n" +
-                    "}\n" +
-                    ".radio-menu-item {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "}\n" +
-                    ".radio-menu-item .label {\n" +
-                    "    -fx-text-fill: #F3F4F6 !important;\n" +
-                    "}\n" +
-                    ".menu-item:hover, .menu-item:focused, .menu-item:armed,\n" +
-                    ".radio-menu-item:hover, .radio-menu-item:focused, .radio-menu-item:armed {\n" +
-                    "    -fx-background-color: #7C3AED !important;\n" +
-                    "    -fx-background-radius: 4px !important;\n" +
-                    "}\n" +
-                    ".menu-item:hover .label, .menu-item:focused .label, .menu-item:armed .label,\n" +
-                    ".radio-menu-item:hover .label, .radio-menu-item:focused .label, .radio-menu-item:armed .label {\n" +
-                    "    -fx-text-fill: #FFFFFF !important;\n" +
-                    "}\n" +
-                    ".choice-box .context-menu {\n" +
-                    "    -fx-background-color: #1F2937 !important;\n" +
-                    "    -fx-border-color: #374151 !important;\n" +
-                    "}\n" +
-                    ".choice-box .menu-item .label {\n" +
-                    "    -fx-text-fill: #F3F4F6 !important;\n" +
-                    "}\n" +
-                    ".choice-box .menu-item:hover .label, .choice-box .menu-item:focused .label {\n" +
-                    "    -fx-text-fill: #FFFFFF !important;\n" +
-                    "}\n" +
-                    ".context-menu .radio-menu-item .check {\n" +
-                    "    -fx-background-color: #F3F4F6 !important;\n" +
-                    "}\n" +
-                    ".context-menu .radio-menu-item:focused .check, .context-menu .radio-menu-item:hover .check {\n" +
-                    "    -fx-background-color: #FFFFFF !important;\n" +
-                    "}\n" +
-                    ".list-view {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "}\n" +
-                    ".list-cell {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "    -fx-text-fill: #FFFFFF !important;\n" +
-                    "}\n" +
-                    ".list-cell:filled:hover {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "}\n" +
-                    ".list-cell:filled:selected {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "}\n" +
-                    ".combo-box-popup .list-view {\n" +
-                    "    -fx-background-color: #1F2937 !important;\n" +
-                    "    -fx-border-color: #374151 !important;\n" +
-                    "    -fx-border-width: 1px !important;\n" +
-                    "    -fx-background-radius: 8px !important;\n" +
-                    "    -fx-border-radius: 8px !important;\n" +
-                    "}\n" +
-                    ".combo-box-popup .list-cell {\n" +
-                    "    -fx-background-color: transparent !important;\n" +
-                    "    -fx-text-fill: #F3F4F6 !important;\n" +
-                    "    -fx-padding: 6px 12px !important;\n" +
-                    "}\n" +
-                    ".combo-box-popup .list-cell:filled:hover, .combo-box-popup .list-cell:filled:selected {\n" +
-                    "    -fx-background-color: #7C3AED !important;\n" +
-                    "    -fx-text-fill: #FFFFFF !important;\n" +
-                    "    -fx-background-radius: 4px !important;\n" +
-                    "}\n"
-                );
-            }
-            String cssUrl = tempCss.toURI().toURL().toExternalForm();
-            this.getStylesheets().add(cssUrl);
-            
-            // Apply stylesheet to Scene so that popup windows (ContextMenus, Tooltips) inherit the dark styles
-            this.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    if (!newScene.getStylesheets().contains(cssUrl)) {
-                        newScene.getStylesheets().add(cssUrl);
-                    }
-                }
-            });
-            if (this.getScene() != null) {
-                if (!this.getScene().getStylesheets().contains(cssUrl)) {
-                    this.getScene().getStylesheets().add(cssUrl);
-                }
-            }
-        } catch (Exception ex) {
-            System.err.println("Failed to load custom collaboration CSS: " + ex.getMessage());
-        }
 
         // Inline Toast Notification Setup (hidden by default)
         notificationBanner.setVisible(false);
         notificationBanner.setManaged(false);
         notificationBanner.setStyle("-fx-background-color: rgba(34,197,94,0.15); -fx-border-color: #22C55E; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-padding: 12 18; -fx-alignment: CENTER_LEFT;");
-        notificationMsg.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
+        notificationMsg.setStyle("-fx-text-fill: #111827; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
         notificationBanner.getChildren().add(notificationMsg);
 
         // Subtitle + Refresh Button Row
@@ -198,25 +91,25 @@ public final class CollaborationView extends VBox {
         
         VBox titleArea = new VBox(4);
         Label subtitle = new Label("Collaborate with other students, build project teams, and find recommended teammates.");
-        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1; -fx-font-style: italic;");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280; -fx-font-style: italic;");
         
-        lastRefreshedLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1; -fx-opacity: 0.7;");
+        lastRefreshedLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-opacity: 0.7;");
         titleArea.getChildren().addAll(subtitle, lastRefreshedLabel);
         
-        Button refreshBtn = new Button("🔄 Refresh Data");
-        refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #7C3AED, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
+        Button refreshBtn = new Button("ðŸ”„ Refresh Data");
+        refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #2563EB, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
         Tooltip.install(refreshBtn, new Tooltip("Refresh all statistics, project teams, and student recommendations"));
         
         // Micro-interaction on Refresh Button
         refreshBtn.setOnMouseEntered(e -> {
-            refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #9061F9, #3F83F8); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px; -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.35), 10, 0, 0, 1);");
+            refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #3B82F6, #3F83F8); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px; -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.35), 10, 0, 0, 1);");
             ScaleTransition st = new ScaleTransition(Duration.millis(80), refreshBtn);
             st.setToX(1.03);
             st.setToY(1.03);
             st.play();
         });
         refreshBtn.setOnMouseExited(e -> {
-            refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #7C3AED, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
+            refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #2563EB, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
             ScaleTransition st = new ScaleTransition(Duration.millis(80), refreshBtn);
             st.setToX(1.0);
             st.setToY(1.0);
@@ -239,11 +132,11 @@ public final class CollaborationView extends VBox {
         HBox statsBar = new HBox(12);
         statsBar.setStyle("-fx-alignment: CENTER;");
         statsBar.getChildren().addAll(
-            createStatCard("Active Teams", activeTeamsStat, "#7C3AED", "Total in platform", "👥"),
-            createStatCard("My Teams", myTeamsStat, "#2563EB", "Created or joined", "👑"),
-            createStatCard("Available Peers", studentsAvailableStat, "#22C55E", "Network candidates", "🎓"),
-            createStatCard("Recommended", recTeammatesStat, "#F59E0B", "Best matches (BFS)", "✨"),
-            createStatCard("Pending Requests", pendingRequestsStat, "#EF4444", "Connections pending", "📩")
+            createStatCard("Active Teams", activeTeamsStat, "#2563EB", "Total in platform", "ðŸ‘¥"),
+            createStatCard("My Teams", myTeamsStat, "#2563EB", "Created or joined", "ðŸ‘‘"),
+            createStatCard("Available Peers", studentsAvailableStat, "#22C55E", "Network candidates", "ðŸŽ“"),
+            createStatCard("Recommended", recTeammatesStat, "#F59E0B", "Best matches (BFS)", "âœ¨"),
+            createStatCard("Pending Requests", pendingRequestsStat, "#EF4444", "Connections pending", "ðŸ“©")
         );
 
         statsBar.setMaxWidth(Double.MAX_VALUE);
@@ -258,20 +151,20 @@ public final class CollaborationView extends VBox {
         // Create Team Card
         VBox createCard = new VBox(12);
         createCard.setMaxWidth(Double.MAX_VALUE);
-        createCard.setStyle("-fx-background-color: #232730; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
+        createCard.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         VBox.setVgrow(createCard, Priority.NEVER);
 
         Label createTitle = new Label("+ Create New Team");
-        createTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        createTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         VBox nameGroup = new VBox(6);
         HBox nameLabelRow = new HBox(6);
         Label nameLabel = new Label("Team Name");
-        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
         Region nameSpacer = new Region();
         HBox.setHgrow(nameSpacer, Priority.ALWAYS);
         Label charCounter = new Label("0 / 30 characters");
-        charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #94a3b8;");
+        charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #9CA3AF;");
         nameLabelRow.getChildren().addAll(nameLabel, nameSpacer, charCounter);
 
         TextField nameField = new TextField(); 
@@ -289,20 +182,20 @@ public final class CollaborationView extends VBox {
                 int len = newVal.trim().length();
                 charCounter.setText(len + " / 30 characters");
                 if (len == 0) {
-                    charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #94a3b8;");
-                    nameValidationLabel.setText("⚠️ Team name is required.");
+                    charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #9CA3AF;");
+                    nameValidationLabel.setText("âš ï¸ Team name is required.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #f59e0b; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
                 } else if (len > 30) {
                     charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #ef4444; -fx-font-weight: bold;");
-                    nameValidationLabel.setText("❌ Exceeds maximum 30 character limit.");
+                    nameValidationLabel.setText("âŒ Exceeds maximum 30 character limit.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #ef4444; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
                 } else {
                     charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #10b981; -fx-font-weight: bold;");
-                    nameValidationLabel.setText("✓ Team name is valid.");
+                    nameValidationLabel.setText("âœ“ Team name is valid.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #10b981; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
@@ -314,7 +207,7 @@ public final class CollaborationView extends VBox {
 
         VBox domainGroup = new VBox(6);
         Label domainLabel = new Label("Project Domain / Description");
-        domainLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+        domainLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
         TextField domainField = new TextField(); 
         domainField.setPromptText("e.g. Web Development, Machine Learning, Mobile App");
         styleTextField(domainField);
@@ -328,12 +221,12 @@ public final class CollaborationView extends VBox {
             if (newVal != null) {
                 int len = newVal.trim().length();
                 if (len == 0) {
-                    domainValidationLabel.setText("⚠️ Project domain description is required.");
+                    domainValidationLabel.setText("âš ï¸ Project domain description is required.");
                     domainValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #f59e0b; -fx-font-weight: bold;");
                     domainValidationLabel.setVisible(true);
                     domainValidationLabel.setManaged(true);
                 } else {
-                    domainValidationLabel.setText("✓ Description is valid.");
+                    domainValidationLabel.setText("âœ“ Description is valid.");
                     domainValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #22C55E; -fx-font-weight: bold;");
                     domainValidationLabel.setVisible(true);
                     domainValidationLabel.setManaged(true);
@@ -341,8 +234,8 @@ public final class CollaborationView extends VBox {
             }
         });
 
-        Label domainHelper = new Label("• Or select one of these popular suggested domains:");
-        domainHelper.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+        Label domainHelper = new Label("â€¢ Or select one of these popular suggested domains:");
+        domainHelper.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
         
         // Interactive suggestion chips
         FlowPane domainChips = new FlowPane();
@@ -351,16 +244,16 @@ public final class CollaborationView extends VBox {
         String[] popularDomains = {"Web Dev", "Machine Learning", "Mobile App", "Data Science", "Cybersecurity"};
         for (String dom : popularDomains) {
             Label chip = new Label(dom);
-            chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.06); -fx-border-width: 1; -fx-border-radius: 12;");
+            chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 12;");
             chip.setOnMouseEntered(e -> {
-                chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #FFFFFF; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.12); -fx-border-width: 1; -fx-border-radius: 12;");
+                chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #111827; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #D1D5DB; -fx-border-width: 1; -fx-border-radius: 12;");
                 ScaleTransition st = new ScaleTransition(Duration.millis(50), chip);
                 st.setToX(1.04);
                 st.setToY(1.04);
                 st.play();
             });
             chip.setOnMouseExited(e -> {
-                chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.06); -fx-border-width: 1; -fx-border-radius: 12;");
+                chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-padding: 4 10; -fx-background-radius: 12; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 12;");
                 ScaleTransition st = new ScaleTransition(Duration.millis(50), chip);
                 st.setToX(1.0);
                 st.setToY(1.0);
@@ -377,8 +270,8 @@ public final class CollaborationView extends VBox {
 
         Button createButton = ViewFactory.primaryButton("Create Team");
         createButton.setMinWidth(140);
-        createButton.setStyle("-fx-background-color: linear-gradient(to right, #7C3AED, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
-        applyBtnHover(createButton, "linear-gradient(to right, #7C3AED, #2563EB)", "linear-gradient(to right, #9061F9, #3F83F8)");
+        createButton.setStyle("-fx-background-color: linear-gradient(to right, #2563EB, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
+        applyBtnHover(createButton, "linear-gradient(to right, #2563EB, #2563EB)", "linear-gradient(to right, #3B82F6, #3F83F8)");
         
         createButton.setOnAction(event -> {
             String name = nameField.getText();
@@ -404,7 +297,7 @@ public final class CollaborationView extends VBox {
                 nameValidationLabel.setManaged(false);
                 domainValidationLabel.setVisible(false);
                 domainValidationLabel.setManaged(false);
-                showNotification("🎉 Project Team '" + name.trim() + "' created successfully!", false);
+                showNotification("ðŸŽ‰ Project Team '" + name.trim() + "' created successfully!", false);
                 refresh();
             } catch (RuntimeException e) {
                 ViewFactory.error(e.getMessage());
@@ -421,23 +314,23 @@ public final class CollaborationView extends VBox {
         // Available Teams Card
         VBox teamsCard = new VBox(12);
         teamsCard.setMaxWidth(Double.MAX_VALUE);
-        teamsCard.setStyle("-fx-background-color: #232730; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
+        teamsCard.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         VBox.setVgrow(teamsCard, Priority.ALWAYS);
         
         HBox teamsHeaderBox = new HBox(8);
         teamsHeaderBox.setStyle("-fx-alignment: CENTER_LEFT;");
-        Label teamsTitle = new Label("👥 Active Teams");
-        teamsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        Label teamsTitle = new Label("ðŸ‘¥ Active Teams");
+        teamsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Region teamsHeaderSpacer = new Region();
         HBox.setHgrow(teamsHeaderSpacer, Priority.ALWAYS);
         
-        teamResultCounter.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1; -fx-font-weight: bold;");
+        teamResultCounter.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-font-weight: bold;");
         teamsHeaderBox.getChildren().addAll(teamsTitle, teamsHeaderSpacer, teamResultCounter);
 
         // Search & Sorting & Filtering controls Row
         HBox teamControlRow = new HBox(8);
-        searchTeamsField.setPromptText("🔍 Search teams by name or domain...");
+        searchTeamsField.setPromptText("ðŸ” Search teams by name or domain...");
         styleTextField(searchTeamsField);
         searchTeamsField.textProperty().addListener((observable, oldValue, newValue) -> applyTeamFilteringAndSorting());
         
@@ -477,17 +370,17 @@ public final class CollaborationView extends VBox {
                     List<String> memberNames = controller.getTeamMemberNames(team.getId());
                     int memberCount = memberNames.size();
                     
-                    String borderCol = isOwner ? "#7C3AED" : (isMember ? "#22C55E" : "rgba(255,255,255,0.08)");
-                    card.setStyle("-fx-background-color: #232730; -fx-padding: 14; -fx-background-radius: 12; -fx-border-color: " + borderCol + "; -fx-border-width: 1.5;");
+                    String borderCol = isOwner ? "#2563EB" : (isMember ? "#22C55E" : "#E5E7EB");
+                    card.setStyle("-fx-background-color: white; -fx-padding: 14; -fx-background-radius: 12; -fx-border-color: " + borderCol + "; -fx-border-width: 1.5;");
                     
                     // Premium Smooth Hover Lift and DropShadow Transition
                     applyCardHoverAnimation(card, borderCol);
 
-                    Label nameLabel = new Label("👥 " + team.getName());
-                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                    Label nameLabel = new Label("ðŸ‘¥ " + team.getName());
+                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                     
                     Label domainLabel = new Label("Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General" : team.getDescription()));
-                    domainLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #CBD5E1; -fx-font-style: italic;");
+                    domainLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6B7280; -fx-font-style: italic;");
                     
                     // Owner Initials Avatar & Creator Label
                     String creatorName = controller.getStudentName(team.getCreatedBy());
@@ -495,24 +388,24 @@ public final class CollaborationView extends VBox {
                     creatorRow.setStyle("-fx-alignment: CENTER_LEFT;");
                     
                     Label creatorAvatar = new Label(getInitials(creatorName));
-                    creatorAvatar.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-font-weight: bold; -fx-font-size: 9px; -fx-alignment: CENTER; -fx-pref-width: 18; -fx-pref-height: 18; -fx-background-radius: 9; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 9;");
+                    creatorAvatar.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-font-weight: bold; -fx-font-size: 9px; -fx-alignment: CENTER; -fx-pref-width: 18; -fx-pref-height: 18; -fx-background-radius: 9; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 9;");
                     
                     Label creatorLabel = new Label("Created By: " + creatorName);
-                    creatorLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1;");
+                    creatorLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
                     creatorRow.getChildren().addAll(creatorAvatar, creatorLabel);
                     
                     Label membersCountLabel = new Label("Capacity: " + memberCount + " / 5 Members");
-                    membersCountLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                    membersCountLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                     
                     // Responsive Progress Track for Capacity using native ProgressBar styled beautifully
                     ProgressBar progressBar = new ProgressBar((double) memberCount / 5.0);
                     progressBar.setMaxHeight(6);
                     progressBar.setMaxWidth(Double.MAX_VALUE);
                     String barColor = memberCount >= 5 ? "-fx-accent: #EF4444;" : (memberCount >= 4 ? "-fx-accent: #F59E0B;" : "-fx-accent: #22C55E;");
-                    progressBar.setStyle("-fx-background-radius: 3; -fx-border-radius: 3; -fx-padding: 0; -fx-control-inner-background: #2D3340; " + barColor);
+                    progressBar.setStyle("-fx-background-radius: 3; -fx-border-radius: 3; -fx-padding: 0; -fx-control-inner-background: #F8FAFC; " + barColor);
                     
                     Label membersLabel = new Label("Members: " + (memberNames.isEmpty() ? "None" : String.join(", ", memberNames)));
-                    membersLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+                    membersLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF;");
                     membersLabel.setWrapText(true);
                     
                     // Team Status Badge
@@ -522,7 +415,7 @@ public final class CollaborationView extends VBox {
                     if (isOwner) {
                         statusText = "Owner";
                         statusColor = "#FFFFFF";
-                        statusBg = "#7C3AED";
+                        statusBg = "#2563EB";
                     } else if (isMember) {
                         statusText = "Joined";
                         statusColor = "#FFFFFF";
@@ -548,11 +441,11 @@ public final class CollaborationView extends VBox {
                     if (isOwner) {
                         joinBtn.setText("Lead / Owner");
                         joinBtn.setDisable(true);
-                        joinBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #94A3B8; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
+                        joinBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #9CA3AF; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
                     } else if (isMember) {
                         joinBtn.setText("Already Joined");
                         joinBtn.setDisable(true);
-                        joinBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #94A3B8; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
+                        joinBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #9CA3AF; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
                     } else if (memberCount >= 5) {
                         joinBtn.setText("Team Full");
                         joinBtn.setDisable(true);
@@ -579,13 +472,13 @@ public final class CollaborationView extends VBox {
                     }
                     
                     Button viewBtn = new Button("View Details");
-                    viewBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-cursor: hand; -fx-min-height: 32; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 6;");
-                    applyBtnHover(viewBtn, "#2D3340", "#3F4756");
+                    viewBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-cursor: hand; -fx-min-height: 32; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 6;");
+                    applyBtnHover(viewBtn, "#F8FAFC", "#3F4756");
                     viewBtn.setOnAction(event -> showTeamDetailsDialog(team));
                     
                     // Quick Clipboard action
-                    Button copyBtn = new Button("📋 Copy ID");
-                    copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-font-size: 11px; -fx-padding: 6 10; -fx-cursor: hand; -fx-min-height: 32;");
+                    Button copyBtn = new Button("ðŸ“‹ Copy ID");
+                    copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #9CA3AF; -fx-font-size: 11px; -fx-padding: 6 10; -fx-cursor: hand; -fx-min-height: 32;");
                     copyBtn.setOnAction(e -> {
                         Clipboard clipboard = Clipboard.getSystemClipboard();
                         ClipboardContent content = new ClipboardContent();
@@ -626,11 +519,11 @@ public final class CollaborationView extends VBox {
 
         // A. Recommended Teammates Card (BFS)
         recCard.setMaxWidth(Double.MAX_VALUE);
-        recCard.setStyle("-fx-background-color: #232730; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
+        recCard.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         VBox.setVgrow(recCard, Priority.ALWAYS);
         
-        Label recTitle = new Label("⭐ Recommended Teammates");
-        recTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        Label recTitle = new Label("â­ Recommended Teammates");
+        recTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
 
         suggestionsList.setPrefHeight(180);
         suggestionsList.setMinHeight(120);
@@ -648,46 +541,46 @@ public final class CollaborationView extends VBox {
                     setStyle("-fx-background-color: transparent; -fx-padding: 0 0 12 0; -fx-background-insets: 0;");
                     
                     VBox card = new VBox(8);
-                    card.setStyle("-fx-background-color: #232730; -fx-padding: 12; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1.5;");
+                    card.setStyle("-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 12; -fx-border-color: #E5E7EB; -fx-border-width: 1.5;");
                     
                     // Smooth hover lift animation and shadows
-                    applyCardHoverAnimation(card, "rgba(255,255,255,0.08)");
+                    applyCardHoverAnimation(card, "#E5E7EB");
 
                     HBox titleRow = new HBox(8);
                     titleRow.setStyle("-fx-alignment: CENTER_LEFT;");
                     
                     Label avatar = new Label(getInitials(suggestion.name()));
-                    avatar.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-font-weight: bold; -fx-font-size: 11px; -fx-alignment: CENTER; -fx-pref-width: 24; -fx-pref-height: 24; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 12;");
+                    avatar.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 11px; -fx-alignment: CENTER; -fx-pref-width: 24; -fx-pref-height: 24; -fx-background-radius: 12; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 12;");
                     
                     Label nameLabel = new Label(suggestion.name());
-                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                     
                     titleRow.getChildren().addAll(avatar, nameLabel);
 
                     // Match Strength Indicator
                     double matchPercentage = suggestion.matchScore() * 100;
                     Label matchLabel = new Label(String.format("%.0f%% Match Score", matchPercentage));
-                    matchLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #7C3AED;");
+                    matchLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #2563EB;");
                     
                     ProgressBar matchBar = new ProgressBar(suggestion.matchScore());
                     matchBar.setMaxHeight(5);
                     matchBar.setPrefWidth(90);
                     String matchColor = matchPercentage >= 70 ? "-fx-accent: #22C55E;" : "-fx-accent: #2563EB;";
-                    matchBar.setStyle("-fx-background-radius: 3; -fx-border-radius: 3; -fx-padding: 0; -fx-control-inner-background: #2D3340; " + matchColor);
+                    matchBar.setStyle("-fx-background-radius: 3; -fx-border-radius: 3; -fx-padding: 0; -fx-control-inner-background: #F8FAFC; " + matchColor);
                     
                     HBox matchRow = new HBox(8, matchLabel, matchBar);
                     matchRow.setStyle("-fx-alignment: CENTER_LEFT;");
                     
                     // Shared skills flow pane
                     Label sharedTitleLabel = new Label("Shared Skills:");
-                    sharedTitleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+                    sharedTitleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                     
                     FlowPane sharedSkillsFlow = new FlowPane();
                     sharedSkillsFlow.setHgap(4);
                     sharedSkillsFlow.setVgap(4);
                     if (suggestion.sharedSkills().isEmpty()) {
                         Label noneLabel = new Label("None");
-                        noneLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+                        noneLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
                         sharedSkillsFlow.getChildren().add(noneLabel);
                     } else {
                         for (String skill : suggestion.sharedSkills()) {
@@ -709,11 +602,11 @@ public final class CollaborationView extends VBox {
                         reasonBg = "#F59E0B";
                     } else if ("Shared Skills".equals(suggestion.reason())) {
                         reasonColor = "#FFFFFF";
-                        reasonBg = "#7C3AED";
+                        reasonBg = "#2563EB";
                     }
                     reasonBadge.setStyle("-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: " + reasonColor + "; -fx-background-color: " + reasonBg + "; -fx-padding: 2 6; -fx-background-radius: 4;");
                     
-                    HBox badgeRow = new HBox(6, new Label("Strength Link:") {{ setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1;"); }}, reasonBadge);
+                    HBox badgeRow = new HBox(6, new Label("Strength Link:") {{ setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;"); }}, reasonBadge);
                     badgeRow.setStyle("-fx-alignment: CENTER_LEFT;");
 
                     Button actionBtn = new Button();
@@ -721,7 +614,7 @@ public final class CollaborationView extends VBox {
                     if (sent) {
                         actionBtn.setText("Connection Pending");
                         actionBtn.setDisable(true);
-                        actionBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #94A3B8; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
+                        actionBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #9CA3AF; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
                     } else {
                         actionBtn.setText("Send Connection");
                         actionBtn.setStyle("-fx-background-color: #2563EB; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-min-height: 32;");
@@ -756,21 +649,21 @@ public final class CollaborationView extends VBox {
         });
 
         // Initialize a highly illustrative, informative Empty State card for Recommended Teammates
-        emptyRecsContainer.setStyle("-fx-background-color: #2D3340; -fx-padding: 20; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1.5; -fx-border-style: dashed; -fx-alignment: CENTER;");
+        emptyRecsContainer.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 20; -fx-background-radius: 12; -fx-border-color: #E5E7EB; -fx-border-width: 1.5; -fx-border-style: dashed; -fx-alignment: CENTER;");
         
-        Label emptyIcon = new Label("💡");
+        Label emptyIcon = new Label("ðŸ’¡");
         emptyIcon.setStyle("-fx-font-size: 32px;");
         
         Label emptyTitle = new Label("Unlock Teammate Recommendations");
-        emptyTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        emptyTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Label emptyDesc = new Label(
             "We use advanced match analysis (Jaccard Similarity and Network Paths) to match you with peers. Try these active steps:\n\n" +
-            "• Add skills to your profile (e.g. Java, Python, SQL)\n" +
-            "• Create or join active teams in the list\n" +
-            "• Send connections to other students in Discovery"
+            "â€¢ Add skills to your profile (e.g. Java, Python, SQL)\n" +
+            "â€¢ Create or join active teams in the list\n" +
+            "â€¢ Send connections to other students in Discovery"
         );
-        emptyDesc.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1; -fx-line-spacing: 4; -fx-text-alignment: CENTER;");
+        emptyDesc.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-line-spacing: 4; -fx-text-alignment: CENTER;");
         emptyDesc.setWrapText(true);
         emptyRecsContainer.getChildren().addAll(emptyIcon, emptyTitle, emptyDesc);
 
@@ -778,29 +671,29 @@ public final class CollaborationView extends VBox {
 
         // B. Collaboration Insights & Tips Card (Premium SaaS feature)
         insightsCard.setMaxWidth(Double.MAX_VALUE);
-        insightsCard.setStyle("-fx-background-color: rgba(20,184,166,0.12); -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: rgba(20,184,166,0.3); -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(20,184,166,0.1), 8, 0, 0, 2);");
+        insightsCard.setStyle("-fx-background-color: rgba(37,99,235,0.05); -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(37,99,235,0.05), 8, 0, 0, 2);");
         VBox.setVgrow(insightsCard, Priority.NEVER);
         rebuildInsightsCard();
 
         // C. Student Discovery Card (No BFS, direct from database)
         discoveryCard.setMaxWidth(Double.MAX_VALUE);
-        discoveryCard.setStyle("-fx-background-color: #232730; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
+        discoveryCard.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         VBox.setVgrow(discoveryCard, Priority.ALWAYS);
         
         HBox discoveryHeaderBox = new HBox(8);
         discoveryHeaderBox.setStyle("-fx-alignment: CENTER_LEFT;");
-        Label discoveryTitle = new Label("🔍 Student Discovery");
-        discoveryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        Label discoveryTitle = new Label("ðŸ” Student Discovery");
+        discoveryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Region discoveryHeaderSpacer = new Region();
         HBox.setHgrow(discoveryHeaderSpacer, Priority.ALWAYS);
         
-        discoveryResultCounter.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1; -fx-font-weight: bold;");
+        discoveryResultCounter.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-font-weight: bold;");
         discoveryHeaderBox.getChildren().addAll(discoveryTitle, discoveryHeaderSpacer, discoveryResultCounter);
 
         // Discovery Search & Sort & Filter controls row
         HBox discoveryControlRow = new HBox(8);
-        searchDiscoveryField.setPromptText("🔍 Search students by name, university, degree, or skill...");
+        searchDiscoveryField.setPromptText("ðŸ” Search students by name, university, degree, or skill...");
         styleTextField(searchDiscoveryField);
         searchDiscoveryField.textProperty().addListener((observable, oldValue, newValue) -> applyStudentFilteringAndSorting());
         
@@ -833,10 +726,10 @@ public final class CollaborationView extends VBox {
                     setStyle("-fx-background-color: transparent; -fx-padding: 0 0 12 0; -fx-background-insets: 0;");
                     
                     VBox card = new VBox(8);
-                    card.setStyle("-fx-background-color: #232730; -fx-padding: 12; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1.5;");
+                    card.setStyle("-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 12; -fx-border-color: #E5E7EB; -fx-border-width: 1.5;");
                     
                     // Smooth hover lift animation and shadows
-                    applyCardHoverAnimation(card, "rgba(255,255,255,0.08)");
+                    applyCardHoverAnimation(card, "#E5E7EB");
 
                     HBox nameRow = new HBox(8);
                     nameRow.setStyle("-fx-alignment: CENTER_LEFT;");
@@ -849,11 +742,11 @@ public final class CollaborationView extends VBox {
                     avatarLabel.setStyle("-fx-background-color: " + avatarColor + "; -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-alignment: CENTER; -fx-pref-width: 26; -fx-pref-height: 26; -fx-background-radius: 13;");
                     
                     Label nameLabel = new Label(suggestion.name());
-                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                    nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                     
                     // Compact Copy Student ID Action
                     Button copyStudentIdBtn = new Button("ID: " + suggestion.student().getId());
-                    copyStudentIdBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-font-size: 9px; -fx-padding: 2 6; -fx-background-radius: 4; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 4;");
+                    copyStudentIdBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-font-size: 9px; -fx-padding: 2 6; -fx-background-radius: 4; -fx-cursor: hand; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4;");
                     copyStudentIdBtn.setOnAction(e -> {
                         Clipboard clipboard = Clipboard.getSystemClipboard();
                         ClipboardContent content = new ClipboardContent();
@@ -867,26 +760,26 @@ public final class CollaborationView extends VBox {
 
                     nameRow.getChildren().addAll(avatarLabel, nameLabel, nameRowSpacer, copyStudentIdBtn);
                     
-                    Label degreeLabel = new Label("🎓 Degree: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
-                    degreeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1;");
+                    Label degreeLabel = new Label("ðŸŽ“ Degree: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
+                    degreeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
                     
                     Label universityLabel = new Label("University: " + (suggestion.student().getUniversity() == null || suggestion.student().getUniversity().isBlank() ? "N/A" : suggestion.student().getUniversity()));
-                    universityLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #CBD5E1;");
+                    universityLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
                     
                     Label skillsTitleLabel = new Label("Skills:");
-                    skillsTitleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+                    skillsTitleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                     
                     FlowPane skillsFlow = new FlowPane();
                     skillsFlow.setHgap(4);
                     skillsFlow.setVgap(4);
                     if (suggestion.skills().isEmpty()) {
                         Label noneLabel = new Label("None listed");
-                        noneLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+                        noneLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
                         skillsFlow.getChildren().add(noneLabel);
                     } else {
                         for (String skill : suggestion.skills()) {
                             Label tag = new Label(skill);
-                            tag.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-padding: 2 6; -fx-background-radius: 4; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
+                            tag.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-padding: 2 6; -fx-background-radius: 4; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
                             skillsFlow.getChildren().add(tag);
                         }
                     }
@@ -895,8 +788,8 @@ public final class CollaborationView extends VBox {
                     skillsRow.setStyle("-fx-alignment: CENTER_LEFT;");
                     
                     Button viewProfileBtn = new Button("View Profile");
-                    viewProfileBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-cursor: hand; -fx-min-height: 32; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 6;");
-                    applyBtnHover(viewProfileBtn, "#2D3340", "#3F4756");
+                    viewProfileBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-cursor: hand; -fx-min-height: 32; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 6;");
+                    applyBtnHover(viewProfileBtn, "#F8FAFC", "#3F4756");
                     viewProfileBtn.setOnAction(event -> showStudentProfileDialog(suggestion));
 
                     Button recommendBtn = new Button();
@@ -904,7 +797,7 @@ public final class CollaborationView extends VBox {
                     if (recommended) {
                         recommendBtn.setText("Recommended");
                         recommendBtn.setDisable(true);
-                        recommendBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #94A3B8; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
+                        recommendBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #9CA3AF; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-min-height: 32;");
                     } else {
                         recommendBtn.setText("Recommend");
                         recommendBtn.setStyle("-fx-background-color: #22C55E; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-min-height: 32;");
@@ -956,7 +849,7 @@ public final class CollaborationView extends VBox {
         HBox.setHgrow(leftColumn, Priority.ALWAYS);
         HBox.setHgrow(rightColumn, Priority.ALWAYS);
 
-        noStudentsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1; -fx-font-style: italic; -fx-padding: 10;");
+        noStudentsLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280; -fx-font-style: italic; -fx-padding: 10;");
 
         refresh();
 
@@ -971,22 +864,20 @@ public final class CollaborationView extends VBox {
         overallLayout.setPadding(new Insets(10, 0, 10, 0));
         overallLayout.setMaxWidth(Double.MAX_VALUE);
         overallLayout.setMaxHeight(Double.MAX_VALUE);
-        overallLayout.setStyle("-fx-background-color: #181A20;");
+        overallLayout.setStyle("-fx-background-color: #F8FAFC;");
         VBox.setVgrow(overallLayout, Priority.ALWAYS);
 
-        BorderPane shell = ViewFactory.shell("Collaboration Module", overallLayout);
-        shell.setStyle("-fx-background-color: #181A20; -fx-font-family: 'Segoe UI';");
+        BorderPane shell = ViewFactory.shell("Collaboration", overallLayout);
+        shell.setStyle("-fx-font-family: 'Segoe UI';");
         VBox.setVgrow(shell, Priority.ALWAYS);
+
         
-        // Style the module title to be bright white in dark mode
+        // Ensure the center panel background matches the light theme
         if (shell.getCenter() instanceof VBox) {
             VBox centerVBox = (VBox) shell.getCenter();
-            centerVBox.setStyle("-fx-background-color: #181A20;");
-            if (!centerVBox.getChildren().isEmpty() && centerVBox.getChildren().get(0) instanceof Label) {
-                Label titleLabel = (Label) centerVBox.getChildren().get(0);
-                titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
-            }
+            centerVBox.setStyle("-fx-background-color: #F8FAFC;");
         }
+
 
         getChildren().add(shell);
     }
@@ -996,11 +887,11 @@ public final class CollaborationView extends VBox {
     private void rebuildInsightsCard() {
         insightsCard.getChildren().clear();
         
-        Label insightsTitle = new Label("📊 Collaboration Insights");
+        Label insightsTitle = new Label("ðŸ“Š Collaboration Insights");
         insightsTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #14B8A6;");
         
         Label insightsDesc = new Label("Dynamic network analytics aggregated from across the SkillSync peer database.");
-        insightsDesc.setStyle("-fx-font-size: 11px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+        insightsDesc.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
         insightsDesc.setWrapText(true);
 
         insightsCard.getChildren().addAll(insightsTitle, insightsDesc);
@@ -1021,15 +912,15 @@ public final class CollaborationView extends VBox {
             
             if (!sortedSkills.isEmpty()) {
                 VBox skillsBox = new VBox(4);
-                Label skillLabel = new Label("🔥 Most Requested Skills (Click to Filter):");
-                skillLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+                Label skillLabel = new Label("ðŸ”¥ Most Requested Skills (Click to Filter):");
+                skillLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                 
                 FlowPane skillsChips = new FlowPane(4, 4);
                 for (Map.Entry<String, Integer> entry : sortedSkills) {
                     Label chip = new Label(entry.getKey() + " (" + entry.getValue() + ")");
-                    chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
-                    chip.setOnMouseEntered(e -> chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #9061F9; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.3); -fx-border-width: 1; -fx-border-radius: 4;"));
-                    chip.setOnMouseExited(e -> chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;"));
+                    chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
+                    chip.setOnMouseEntered(e -> chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #3B82F6; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.3); -fx-border-width: 1; -fx-border-radius: 4;"));
+                    chip.setOnMouseExited(e -> chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(124,58,237,0.15); -fx-border-width: 1; -fx-border-radius: 4;"));
                     chip.setOnMouseClicked(e -> {
                         searchDiscoveryField.setText(entry.getKey());
                         showNotification("Filtering students by skill: " + entry.getKey(), false);
@@ -1056,15 +947,15 @@ public final class CollaborationView extends VBox {
             
             if (!sortedDomains.isEmpty()) {
                 VBox domainsBox = new VBox(4);
-                Label domainLabel = new Label("🚀 Trending Project Domains (Click to Search):");
-                domainLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1;");
+                Label domainLabel = new Label("ðŸš€ Trending Project Domains (Click to Search):");
+                domainLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                 
                 FlowPane domainChips = new FlowPane(4, 4);
                 for (Map.Entry<String, Integer> entry : sortedDomains) {
                     Label chip = new Label(entry.getKey());
-                    chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #14B8A6; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(20,184,166,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
-                    chip.setOnMouseEntered(e -> chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #2DD4BF; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(20,184,166,0.3); -fx-border-width: 1; -fx-border-radius: 4;"));
-                    chip.setOnMouseExited(e -> chip.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #14B8A6; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(20,184,166,0.15); -fx-border-width: 1; -fx-border-radius: 4;"));
+                    chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #14B8A6; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(20,184,166,0.15); -fx-border-width: 1; -fx-border-radius: 4;");
+                    chip.setOnMouseEntered(e -> chip.setStyle("-fx-background-color: #3F4756; -fx-text-fill: #2DD4BF; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4;"));
+                    chip.setOnMouseExited(e -> chip.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #14B8A6; -fx-padding: 3 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(20,184,166,0.15); -fx-border-width: 1; -fx-border-radius: 4;"));
                     chip.setOnMouseClicked(e -> {
                         searchTeamsField.setText(entry.getKey());
                         showNotification("Searching teams in domain: " + entry.getKey(), false);
@@ -1077,8 +968,8 @@ public final class CollaborationView extends VBox {
         }
 
         // 3. Jaccard similarity brief guide
-        Label similarityLabel = new Label("💡 How recommendations work: We map previous student collaborations (BFS) and calculate skill matches (Jaccard coefficient) to recommend ideal capstone team matches.");
-        similarityLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #94A3B8; -fx-line-spacing: 2.5;");
+        Label similarityLabel = new Label("ðŸ’¡ How recommendations work: We map previous student collaborations (BFS) and calculate skill matches (Jaccard coefficient) to recommend ideal capstone team matches.");
+        similarityLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #9CA3AF; -fx-line-spacing: 2.5;");
         similarityLabel.setWrapText(true);
         insightsCard.getChildren().add(similarityLabel);
     }
@@ -1090,14 +981,14 @@ public final class CollaborationView extends VBox {
         card.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(card, Priority.ALWAYS);
         card.setPadding(new Insets(12, 14, 12, 14));
-        card.setStyle("-fx-background-color: #232730; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.06) rgba(255,255,255,0.06) rgba(255,255,255,0.06) " + colorHex + "; -fx-border-width: 1 1 1 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #E5E7EB #E5E7EB #E5E7EB " + colorHex + "; -fx-border-width: 1 1 1 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);");
         
         HBox topRow = new HBox(6);
         topRow.setStyle("-fx-alignment: CENTER_LEFT;");
         Label iconLabel = new Label(iconSymbol);
-        iconLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #CBD5E1;");
+        iconLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #6B7280;");
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94A3B8;");
+        titleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;");
         titleLabel.setWrapText(true);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -1107,18 +998,18 @@ public final class CollaborationView extends VBox {
         
         Label subLabel = new Label(subtitle);
         subLabel.setWrapText(true);
-        subLabel.setStyle("-fx-font-size: 9.5px; -fx-text-fill: #CBD5E1; -fx-opacity: 0.8;");
+        subLabel.setStyle("-fx-font-size: 9.5px; -fx-text-fill: #6B7280; -fx-opacity: 0.8;");
         
         // Micro-interaction: Hover Lift & Accent Glow on stats cards using JavaFX smoothly
         card.setOnMouseEntered(e -> {
-            card.setStyle("-fx-background-color: #2D3340; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.12) rgba(255,255,255,0.12) rgba(255,255,255,0.12) " + colorHex + "; -fx-border-width: 1 1 1 5;");
+            card.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 12; -fx-border-color: #D1D5DB #D1D5DB #D1D5DB " + colorHex + "; -fx-border-width: 1 1 1 5;");
             card.setEffect(new DropShadow(15, Color.web(colorHex, 0.25)));
             TranslateTransition tt = new TranslateTransition(Duration.millis(120), card);
             tt.setToY(-4);
             tt.play();
         });
         card.setOnMouseExited(e -> {
-            card.setStyle("-fx-background-color: #232730; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.06) rgba(255,255,255,0.06) rgba(255,255,255,0.06) " + colorHex + "; -fx-border-width: 1 1 1 5;");
+            card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #E5E7EB #E5E7EB #E5E7EB " + colorHex + "; -fx-border-width: 1 1 1 5;");
             card.setEffect(new DropShadow(10, Color.web("#000000", 0.15)));
             TranslateTransition tt = new TranslateTransition(Duration.millis(120), card);
             tt.setToY(0);
@@ -1133,10 +1024,10 @@ public final class CollaborationView extends VBox {
         notificationMsg.setText(message);
         if (isError) {
             notificationBanner.setStyle("-fx-background-color: rgba(239,68,68,0.15); -fx-border-color: #EF4444; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-padding: 12 18; -fx-alignment: CENTER_LEFT;");
-            notificationMsg.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
+            notificationMsg.setStyle("-fx-text-fill: #111827; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
         } else {
             notificationBanner.setStyle("-fx-background-color: rgba(34,197,94,0.15); -fx-border-color: #22C55E; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-padding: 12 18; -fx-alignment: CENTER_LEFT;");
-            notificationMsg.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
+            notificationMsg.setStyle("-fx-text-fill: #111827; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';");
         }
         notificationBanner.setVisible(true);
         notificationBanner.setManaged(true);
@@ -1169,7 +1060,7 @@ public final class CollaborationView extends VBox {
         confirm.setContentText(content);
         
         DialogPane pane = confirm.getDialogPane();
-        pane.setStyle("-fx-background-color: #232730; -fx-font-family: 'Segoe UI';");
+        pane.setStyle("-fx-background-color: white; -fx-font-family: 'Segoe UI';");
         
         // Fine-tune buttons inside Dialog Pane
         for (ButtonType bt : pane.getButtonTypes()) {
@@ -1177,7 +1068,7 @@ public final class CollaborationView extends VBox {
             if (bt == ButtonType.OK) {
                 btn.setStyle("-fx-background-color: #2563EB; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 6 14; -fx-font-weight: bold; -fx-cursor: hand;");
             } else {
-                btn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-background-radius: 4; -fx-padding: 6 14; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 4;");
+                btn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-background-radius: 4; -fx-padding: 6 14; -fx-cursor: hand; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4;");
             }
         }
         
@@ -1317,8 +1208,8 @@ public final class CollaborationView extends VBox {
     }
 
     private void styleTextField(TextField tf) {
-        String base = "-fx-background-color: #2D3340; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #94A3B8; -fx-font-size: 12px;";
-        String active = "-fx-background-color: #2D3340; -fx-border-color: #7C3AED; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-text-fill: #FFFFFF; -fx-prompt-text-fill: #94A3B8; -fx-font-size: 12px; -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.2), 8, 0, 0, 1);";
+        String base = "-fx-background-color: #F8FAFC; -fx-border-color: #E5E7EB; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-text-fill: #111827; -fx-prompt-text-fill: #94A3B8; -fx-font-size: 12px;";
+        String active = "-fx-background-color: #F8FAFC; -fx-border-color: #2563EB; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-text-fill: #111827; -fx-prompt-text-fill: #94A3B8; -fx-font-size: 12px; -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.2), 8, 0, 0, 1);";
         tf.setStyle(base);
         tf.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
@@ -1330,8 +1221,8 @@ public final class CollaborationView extends VBox {
     }
 
     private void styleChoiceBox(ChoiceBox<String> cb) {
-        String base = "-fx-background-color: #2D3340; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF; -fx-text-base-color: #FFFFFF; -fx-mark-color: #FFFFFF; -fx-cursor: hand;";
-        String hover = "-fx-background-color: #353D4D; -fx-border-color: #7C3AED; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF; -fx-text-base-color: #FFFFFF; -fx-mark-color: #FFFFFF; -fx-cursor: hand;";
+        String base = "-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #111827; -fx-text-base-color: #111827; -fx-mark-color: #111827; -fx-cursor: hand;";
+        String hover = "-fx-background-color: #EFF6FF; -fx-border-color: #2563EB; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 4 8; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #1D4ED8; -fx-text-base-color: #1D4ED8; -fx-mark-color: #1D4ED8; -fx-cursor: hand;";
         cb.setStyle(base);
         cb.setOnMouseEntered(e -> cb.setStyle(hover));
         cb.setOnMouseExited(e -> cb.setStyle(base));
@@ -1376,14 +1267,14 @@ public final class CollaborationView extends VBox {
 
     private void applyCardHoverAnimation(VBox card, String borderCol) {
         card.setOnMouseEntered(e -> {
-            card.setStyle("-fx-background-color: #2D3340; -fx-padding: " + card.getPadding().getTop() + "; -fx-background-radius: 16; -fx-border-color: #7C3AED; -fx-border-width: 1.5; -fx-border-radius: 16;");
-            card.setEffect(new DropShadow(15, Color.web("#7C3AED", 0.15)));
+            card.setStyle("-fx-background-color: #F8FAFC; -fx-padding: " + card.getPadding().getTop() + "; -fx-background-radius: 16; -fx-border-color: #2563EB; -fx-border-width: 1.5; -fx-border-radius: 16;");
+            card.setEffect(new DropShadow(15, Color.web("#2563EB", 0.15)));
             TranslateTransition tt = new TranslateTransition(Duration.millis(120), card);
             tt.setToY(-4);
             tt.play();
         });
         card.setOnMouseExited(e -> {
-            card.setStyle("-fx-background-color: #232730; -fx-padding: " + card.getPadding().getTop() + "; -fx-background-radius: 16; -fx-border-color: " + borderCol + "; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
+            card.setStyle("-fx-background-color: white; -fx-padding: " + card.getPadding().getTop() + "; -fx-background-radius: 16; -fx-border-color: " + borderCol + "; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
             card.setEffect(null);
             TranslateTransition tt = new TranslateTransition(Duration.millis(120), card);
             tt.setToY(0);
@@ -1397,7 +1288,7 @@ public final class CollaborationView extends VBox {
         alert.setHeaderText(null);
         
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #232730; -fx-font-family: 'Segoe UI';");
+        dialogPane.setStyle("-fx-background-color: white; -fx-font-family: 'Segoe UI';");
         
         // Premium buttons inside dialog pane
         for (ButtonType bt : dialogPane.getButtonTypes()) {
@@ -1421,15 +1312,15 @@ public final class CollaborationView extends VBox {
         
         VBox nameEmailBox = new VBox(4);
         Label nameLabel = new Label(suggestion.name());
-        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         User u = controller.getStudentUser(suggestion.student().getId());
         String email = (u != null) ? u.getEmail() : (suggestion.name().toLowerCase().replace(" ", ".") + "@skillsync.edu");
-        Label emailLabel = new Label("📧 " + email);
-        emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #CBD5E1;");
+        Label emailLabel = new Label("ðŸ“§ " + email);
+        emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6B7280;");
         
         Button copyEmailBtn = new Button("Copy");
-        copyEmailBtn.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #CBD5E1; -fx-font-size: 10px; -fx-padding: 2 6; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 4;");
+        copyEmailBtn.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #6B7280; -fx-font-size: 10px; -fx-padding: 2 6; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-weight: bold; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4;");
         copyEmailBtn.setOnAction(e -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             ClipboardContent clipContent = new ClipboardContent();
@@ -1445,37 +1336,37 @@ public final class CollaborationView extends VBox {
         headerRow.getChildren().addAll(avatarLabel, nameEmailBox);
         
         VBox detailsCard = new VBox(10);
-        detailsCard.setStyle("-fx-background-color: #2D3340; -fx-padding: 16; -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1;");
+        detailsCard.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 16; -fx-background-radius: 10; -fx-border-color: #E5E7EB; -fx-border-width: 1;");
         
         Label universityLabel = new Label("University: " + (suggestion.student().getUniversity() == null || suggestion.student().getUniversity().isBlank() ? "N/A" : suggestion.student().getUniversity()));
-        universityLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1;");
+        universityLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label degreeLabel = new Label("🎓 Degree / Branch: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
-        degreeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1;");
+        Label degreeLabel = new Label("ðŸŽ“ Degree / Branch: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
+        degreeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label gradLabel = new Label("📅 Graduation Year: " + (suggestion.student().getGraduationYear() == 0 ? "N/A" : String.valueOf(suggestion.student().getGraduationYear())));
-        gradLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1;");
+        Label gradLabel = new Label("ðŸ“… Graduation Year: " + (suggestion.student().getGraduationYear() == 0 ? "N/A" : String.valueOf(suggestion.student().getGraduationYear())));
+        gradLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label bioLabel = new Label("📝 Biography: " + (suggestion.student().getBio() == null || suggestion.student().getBio().isBlank() ? "No bio provided." : suggestion.student().getBio()));
-        bioLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #CBD5E1;");
+        Label bioLabel = new Label("ðŸ“ Biography: " + (suggestion.student().getBio() == null || suggestion.student().getBio().isBlank() ? "No bio provided." : suggestion.student().getBio()));
+        bioLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         bioLabel.setWrapText(true);
         
         detailsCard.getChildren().addAll(universityLabel, degreeLabel, gradLabel, bioLabel);
         
-        Label skillsHeader = new Label("💪 Professional Skills Portfolio");
-        skillsHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7C3AED;");
+        Label skillsHeader = new Label("ðŸ’ª Professional Skills Portfolio");
+        skillsHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2563EB;");
         
         FlowPane skillsFlow = new FlowPane();
         skillsFlow.setHgap(6);
         skillsFlow.setVgap(6);
         if (suggestion.skills().isEmpty()) {
             Label noneLabel = new Label("No skills listed.");
-            noneLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #94A3B8; -fx-font-style: italic;");
+            noneLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
             skillsFlow.getChildren().add(noneLabel);
         } else {
             for (String skill : suggestion.skills()) {
                 Label tag = new Label(skill);
-                tag.setStyle("-fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-border-color: rgba(124,58,237,0.3); -fx-border-width: 1; -fx-padding: 4 10; -fx-background-radius: 6; -fx-border-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
+                tag.setStyle("-fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-border-color: rgba(124,58,237,0.3); -fx-border-width: 1; -fx-padding: 4 10; -fx-background-radius: 6; -fx-border-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
                 skillsFlow.getChildren().add(tag);
             }
         }
@@ -1491,7 +1382,7 @@ public final class CollaborationView extends VBox {
         alert.setHeaderText(null);
         
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #232730; -fx-font-family: 'Segoe UI';");
+        dialogPane.setStyle("-fx-background-color: white; -fx-font-family: 'Segoe UI';");
         
         for (ButtonType bt : dialogPane.getButtonTypes()) {
             Button btn = (Button) dialogPane.lookupButton(bt);
@@ -1507,28 +1398,28 @@ public final class CollaborationView extends VBox {
         HBox headerRow = new HBox(12);
         headerRow.setStyle("-fx-alignment: CENTER_LEFT;");
         
-        Label teamIcon = new Label("👥");
-        teamIcon.setStyle("-fx-font-size: 24px; -fx-background-color: #2D3340; -fx-text-fill: #7C3AED; -fx-alignment: CENTER; -fx-pref-width: 44; -fx-pref-height: 44; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 8;");
+        Label teamIcon = new Label("ðŸ‘¥");
+        teamIcon.setStyle("-fx-font-size: 24px; -fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-alignment: CENTER; -fx-pref-width: 44; -fx-pref-height: 44; -fx-background-radius: 8; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 8;");
         
         VBox nameOwnerBox = new VBox(4);
         Label nameLabel = new Label(team.getName());
-        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         String creatorName = controller.getStudentName(team.getCreatedBy());
-        Label creatorLabel = new Label("👑 Project Lead: " + creatorName);
-        creatorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #CBD5E1;");
+        Label creatorLabel = new Label("ðŸ‘‘ Project Lead: " + creatorName);
+        creatorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6B7280;");
         
         nameOwnerBox.getChildren().addAll(nameLabel, creatorLabel);
         headerRow.getChildren().addAll(teamIcon, nameOwnerBox);
         
         VBox detailsCard = new VBox(10);
-        detailsCard.setStyle("-fx-background-color: #2D3340; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1;");
+        detailsCard.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: #E5E7EB; -fx-border-width: 1;");
         
-        Label domainLabel = new Label("🌐 Project Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General Project" : team.getDescription()));
+        Label domainLabel = new Label("ðŸŒ Project Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General Project" : team.getDescription()));
         domainLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #14B8A6; -fx-font-weight: bold;");
         
-        Button copyIdBtn = new Button("📋 Copy Team ID: " + team.getId());
-        copyIdBtn.setStyle("-fx-background-color: #2D3340; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-size: 11px; -fx-text-fill: #CBD5E1; -fx-padding: 3 8; -fx-cursor: hand; -fx-font-weight: bold;");
+        Button copyIdBtn = new Button("ðŸ“‹ Copy Team ID: " + team.getId());
+        copyIdBtn.setStyle("-fx-background-color: #F8FAFC; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-padding: 3 8; -fx-cursor: hand; -fx-font-weight: bold;");
         copyIdBtn.setOnAction(e -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             ClipboardContent clipContent = new ClipboardContent();
@@ -1539,8 +1430,8 @@ public final class CollaborationView extends VBox {
         
         detailsCard.getChildren().addAll(domainLabel, copyIdBtn);
         
-        Label membersHeader = new Label("👥 Project Team Members");
-        membersHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #7C3AED;");
+        Label membersHeader = new Label("ðŸ‘¥ Project Team Members");
+        membersHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2563EB;");
         
         VBox membersListVBox = new VBox(6);
         membersListVBox.setStyle("-fx-padding: 0 0 0 6;");
@@ -1551,21 +1442,21 @@ public final class CollaborationView extends VBox {
             
             for (TeamRepository.TeamMember m : members) {
                 HBox memberRow = new HBox(8);
-                memberRow.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4 8; -fx-background-color: #2D3340; -fx-background-radius: 6; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1; -fx-border-radius: 6;");
+                memberRow.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4 8; -fx-background-color: #F8FAFC; -fx-background-radius: 6; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1; -fx-border-radius: 6;");
                 
-                Label bullet = new Label("•");
-                bullet.setStyle("-fx-text-fill: #7C3AED; -fx-font-weight: bold;");
+                Label bullet = new Label("â€¢");
+                bullet.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: bold;");
                 
                 Label nameItem = new Label(m.name());
-                nameItem.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;");
+                nameItem.setStyle("-fx-font-size: 12px; -fx-text-fill: #111827; -fx-font-weight: bold;");
                 
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
                 
                 String roleText = (m.role() == null || m.role().isBlank()) ? "Member" : m.role();
                 Label roleBadge = new Label(roleText);
-                String roleBg = "Project Lead".equalsIgnoreCase(roleText) || "Owner".equalsIgnoreCase(roleText) ? "rgba(124,58,237,0.15)" : "#232730";
-                String roleTxtCol = "Project Lead".equalsIgnoreCase(roleText) || "Owner".equalsIgnoreCase(roleText) ? "#7C3AED" : "#CBD5E1";
+                String roleBg = "Project Lead".equalsIgnoreCase(roleText) || "Owner".equalsIgnoreCase(roleText) ? "rgba(124,58,237,0.15)" : "white";
+                String roleTxtCol = "Project Lead".equalsIgnoreCase(roleText) || "Owner".equalsIgnoreCase(roleText) ? "#2563EB" : "#CBD5E1";
                 roleBadge.setStyle("-fx-font-size: 10px; -fx-background-color: " + roleBg + "; -fx-text-fill: " + roleTxtCol + "; -fx-padding: 2 6; -fx-background-radius: 4; -fx-font-weight: bold;");
                 
                 memberRow.getChildren().addAll(bullet, nameItem, spacer, roleBadge);
@@ -1573,13 +1464,13 @@ public final class CollaborationView extends VBox {
             }
             
             Label totalLabel = new Label("Capacity Status: " + count + " / 5 Members (" + (5 - count) + " slots left)");
-            totalLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #CBD5E1; -fx-padding: 4 0 0 0;");
+            totalLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #6B7280; -fx-padding: 4 0 0 0;");
             
             ProgressBar progressBar = new ProgressBar((double) count / 5.0);
             progressBar.setMaxHeight(8);
             progressBar.setPrefWidth(380);
             String barColor = count >= 5 ? "-fx-accent: #EF4444;" : (count >= 4 ? "-fx-accent: #F59E0B;" : "-fx-accent: #22C55E;");
-            progressBar.setStyle("-fx-background-radius: 4; -fx-border-radius: 4; -fx-padding: 0; -fx-control-inner-background: #2D3340; " + barColor);
+            progressBar.setStyle("-fx-background-radius: 4; -fx-border-radius: 4; -fx-padding: 0; -fx-control-inner-background: #F8FAFC; " + barColor);
             
             content.getChildren().addAll(headerRow, detailsCard, membersHeader, membersListVBox, totalLabel, progressBar);
         } catch (Exception e) {
@@ -1612,13 +1503,13 @@ public final class CollaborationView extends VBox {
             // Handle recommended list (empty state layout)
             List<CollaborationController.StudentSuggestion> recs = controller.getTeammateSuggestions();
             if (recs.isEmpty()) {
-                recCard.getChildren().setAll(new Label("⭐ Recommended Teammates") {{
-                    setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                recCard.getChildren().setAll(new Label("â­ Recommended Teammates") {{
+                    setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                 }}, emptyRecsContainer);
             } else {
                 suggestionsList.setItems(FXCollections.observableArrayList(recs));
-                recCard.getChildren().setAll(new Label("⭐ Recommended Teammates") {{
-                    setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;");
+                recCard.getChildren().setAll(new Label("â­ Recommended Teammates") {{
+                    setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                 }}, suggestionsList);
             }
 
@@ -1635,3 +1526,4 @@ public final class CollaborationView extends VBox {
         }
     }
 }
+

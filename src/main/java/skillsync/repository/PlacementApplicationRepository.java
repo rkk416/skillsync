@@ -76,7 +76,32 @@ public class PlacementApplicationRepository extends BaseRepository {
                 resultSet.getTimestamp("updated_at").toLocalDateTime());
     }
 
-    private Timestamp toTimestamp(java.time.LocalDateTime value) {
-        return value == null ? null : Timestamp.valueOf(value);
+    private java.sql.Timestamp toTimestamp(java.time.LocalDateTime value) {
+        return value == null ? null : java.sql.Timestamp.valueOf(value);
+    }
+
+    public long count() throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM placement_applications");
+             ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
+
+    public java.util.Map<String, Integer> getPlacementStatusDistribution() throws SQLException {
+        String sql = "SELECT COALESCE(NULLIF(status,''),'Unknown') as s, COUNT(*) as cnt FROM placement_applications GROUP BY COALESCE(NULLIF(status,''),'Unknown') ORDER BY cnt DESC";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(titleCase(rs.getString("s")), rs.getInt("cnt"));
+        }
+        return result;
+    }
+
+    private static String titleCase(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
     }
 }
+

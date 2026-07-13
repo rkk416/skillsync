@@ -1,50 +1,28 @@
 package skillsync.ai;
 
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-
 import java.io.File;
-import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class ResumeTextExtractor {
+    private static final Logger LOGGER = Logger.getLogger(ResumeTextExtractor.class.getName());
 
     private ResumeTextExtractor() {
     }
 
-    public static String extractText(File pdfFile) {
-
-        System.out.println("========== ResumeTextExtractor ==========");
-        System.out.println(pdfFile);
-
-        if (pdfFile == null) {
-            throw new RuntimeException("Resume file not found.");
-        }
-
-        System.out.println(pdfFile.getName());
-
-        try (PDDocument document = Loader.loadPDF(pdfFile)) {
-
-            System.out.println("PDF Loaded Successfully");
-
-            PDFTextStripper stripper = new PDFTextStripper();
-
-            String text = stripper.getText(document);
-
-            System.out.println("Characters : " + text.length());
-
+    public static String extractText(File resumeFile) {
+        try {
+            String text = ResumeParserFactory.parserFor(resumeFile).extractText(resumeFile).trim();
+            if (text.isBlank()) {
+                throw new ResumeExtractionException("No readable text was found in the selected resume.");
+            }
             return text;
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-            throw new RuntimeException(
-                    "Unable to read PDF : " + e.getMessage(),
-                    e
-            );
+        } catch (ResumeExtractionException exception) {
+            LOGGER.warning(exception.getMessage());
+            throw exception;
+        } catch (RuntimeException exception) {
+            LOGGER.log(Level.WARNING, "Unexpected resume extraction failure", exception);
+            throw new ResumeExtractionException("Unable to read the selected resume. Please verify the file and try again.", exception);
         }
-
     }
-
 }

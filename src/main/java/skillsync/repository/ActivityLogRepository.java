@@ -50,4 +50,41 @@ public class ActivityLogRepository extends BaseRepository {
         return new ActivityLog(resultSet.getInt("id"), resultSet.getInt("student_id"), resultSet.getString("activity_type"),
                 resultSet.getString("description"), resultSet.getTimestamp("created_at").toLocalDateTime());
     }
+
+    public java.util.Map<String, Integer> getWeeklyActivityTimeline() throws SQLException {
+        String sql = "SELECT TO_CHAR(DATE_TRUNC('week', created_at), 'Mon DD') as wk, COUNT(*) as cnt " +
+                     "FROM activity_logs WHERE created_at >= CURRENT_DATE - INTERVAL '8 weeks' " +
+                     "GROUP BY DATE_TRUNC('week', created_at) ORDER BY DATE_TRUNC('week', created_at)";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(rs.getString("wk"), rs.getInt("cnt"));
+        }
+        return result;
+    }
+
+    public java.util.Map<String, Integer> getDailyActivityThisWeek() throws SQLException {
+        String sql = "SELECT TO_CHAR(created_at, 'Dy') as day, COUNT(*) as cnt " +
+                     "FROM activity_logs WHERE created_at >= DATE_TRUNC('week', CURRENT_DATE) " +
+                     "GROUP BY TO_CHAR(created_at, 'Dy'), EXTRACT(DOW FROM created_at) " +
+                     "ORDER BY EXTRACT(DOW FROM created_at)";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(rs.getString("day"), rs.getInt("cnt"));
+        }
+        return result;
+    }
+
+    public long countThisWeek() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM activity_logs WHERE created_at >= DATE_TRUNC('week', CURRENT_DATE)";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
 }
+

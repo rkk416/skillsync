@@ -121,4 +121,11 @@ public class TeamRepository extends BaseRepository {
         return new Team(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("description"),
                 resultSet.getInt("created_by"), resultSet.getTimestamp("created_at").toLocalDateTime());
     }
+
+    public long count() throws SQLException {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM teams"); ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
 }
+

@@ -182,4 +182,14 @@ public class SkillRepository extends BaseRepository {
     public List<Skill> findByStudentId(int studentId) throws SQLException {
         return findByStudentIdSkills(studentId);
     }
+
+    public Map<String, Integer> getSkillDistribution() throws SQLException {
+        String sql = "SELECT COALESCE(NULLIF(category, ''), 'Uncategorized') as cat, COUNT(*) as cnt FROM skills GROUP BY COALESCE(NULLIF(category, ''), 'Uncategorized') ORDER BY cnt DESC";
+        Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(rs.getString("cat"), rs.getInt("cnt"));
+        }
+        return result;
+    }
 }

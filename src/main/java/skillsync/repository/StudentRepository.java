@@ -134,4 +134,23 @@ public class StudentRepository extends BaseRepository {
                 resultSet.getString("degree"), resultSet.getInt("graduation_year"), resultSet.getString("bio"),
                 null, null, null);
     }
-}
+
+    public long count() throws SQLException {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM students"); ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
+
+    public long countEligiblePairs() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM students s CROSS JOIN companies c " +
+                     "WHERE NOT EXISTS ( " +
+                     "  SELECT 1 FROM company_requirements cr " +
+                     "  LEFT JOIN student_skills ss ON ss.skill_id = cr.skill_id AND ss.student_id = s.id " +
+                     "  WHERE cr.company_id = c.id " +
+                     "    AND (ss.proficiency_level IS NULL OR ss.proficiency_level < cr.minimum_proficiency) " +
+                     ")";
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
+}

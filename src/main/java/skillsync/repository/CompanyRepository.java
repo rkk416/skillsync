@@ -60,4 +60,15 @@ public class CompanyRepository extends BaseRepository {
             resultSet.next(); return resultSet.getLong(1);
         }
     }
+
+    public java.util.Map<String, Integer> getIndustryDistribution() throws SQLException {
+        String sql = "SELECT COALESCE(NULLIF(industry, ''), 'Unspecified') as ind, COUNT(*) as cnt FROM companies GROUP BY COALESCE(NULLIF(industry, ''), 'Unspecified') ORDER BY cnt DESC";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(rs.getString("ind"), rs.getInt("cnt"));
+        }
+        return result;
+    }
 }
+

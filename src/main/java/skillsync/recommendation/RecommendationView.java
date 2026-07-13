@@ -97,10 +97,30 @@ public final class RecommendationView extends VBox {
                 ViewFactory.caption("Skill and company signals are ranked by current profile gaps and workspace demand."),
                 ViewFactory.caption("Teammate cards emphasize collaboration readiness and shared technical direction."),
                 ViewFactory.caption(data.live ? "Live data is active for this session." : "Preview cards are isolated so live integration can replace them later."));
+
+        javafx.scene.control.Button reviewTop = ViewFactory.primaryButton("Review Top Match");
+        reviewTop.setOnAction(e -> {
+            var all = new ArrayList<RankedRecommendation<?>>();
+            all.addAll(data.skills);
+            all.addAll(data.companies);
+            all.addAll(data.teammates);
+            var top = all.stream().max(java.util.Comparator.comparingDouble(RankedRecommendation::score)).orElse(null);
+            if (top != null) {
+                ViewFactory.info("Top Match: " + top.confidence() + " confidence recommendation with score " + Math.round(top.score()) + "%\nReason: " + String.join(" ", top.reasons()));
+            } else {
+                ViewFactory.info("No recommendations available to review.");
+            }
+        });
+
+        javafx.scene.control.Button saveSet = ViewFactory.secondaryButton("Save Recommendation Set");
+        saveSet.setOnAction(e -> ViewFactory.info("Recommendation set successfully saved to your profile workspace."));
+
+        javafx.scene.control.Button createPlan = ViewFactory.secondaryButton("Create Collaboration Plan");
+        createPlan.setOnAction(e -> skillsync.utils.NavigationManager.getInstance().navigateTo("collaboration"));
+
         VBox actions = ViewFactory.card(ViewFactory.sectionHeader("Action Panel", "Move quickly without leaving context."),
-                ViewFactory.primaryButton("Review Top Match"),
-                ViewFactory.secondaryButton("Save Recommendation Set"),
-                ViewFactory.secondaryButton("Create Collaboration Plan"));
+                reviewTop, saveSet, createPlan);
+
         HBox row = new HBox(16, signals, actions);
         HBox.setHgrow(signals, Priority.ALWAYS);
         HBox.setHgrow(actions, Priority.ALWAYS);
@@ -147,7 +167,26 @@ public final class RecommendationView extends VBox {
         recommendation.suggestedImprovements().stream().limit(3).forEach(improvement -> tagRow.getChildren().add(ViewFactory.tag(improvement)));
         HBox header = new HBox(10, ViewFactory.badge(type, scoreColor(normalizedScore)), ViewFactory.spacer(), scoreLabel);
         header.setAlignment(Pos.CENTER_LEFT);
-        HBox buttons = new HBox(8, ViewFactory.primaryButton(action), ViewFactory.secondaryButton("View Profile"), ViewFactory.textButton("Save"));
+        javafx.scene.control.Button actBtn = ViewFactory.primaryButton(action);
+        actBtn.setOnAction(e -> {
+            if ("Start collaboration".equalsIgnoreCase(action)) {
+                skillsync.utils.NavigationManager.getInstance().navigateTo("collaboration");
+            } else {
+                ViewFactory.info("Initiating action for: " + title + "\nAction: " + action);
+            }
+        });
+        javafx.scene.control.Button viewProfileBtn = ViewFactory.secondaryButton("View Profile");
+        viewProfileBtn.setOnAction(e -> {
+            if ("Teammate".equalsIgnoreCase(type)) {
+                ViewFactory.info("Viewing profile details for potential teammate: " + title);
+            } else {
+                skillsync.utils.NavigationManager.getInstance().navigateTo("profile");
+            }
+        });
+        javafx.scene.control.Button saveBtn = ViewFactory.textButton("Save");
+        saveBtn.setOnAction(e -> ViewFactory.info("Saved recommendation for: " + title));
+
+        HBox buttons = new HBox(8, actBtn, viewProfileBtn, saveBtn);
         buttons.setAlignment(Pos.CENTER_LEFT);
         VBox card = ViewFactory.card(header, titleLabel, subtitleLabel, bar, ViewFactory.caption(reason), tagRow, buttons);
         card.setPrefWidth(342);

@@ -60,4 +60,48 @@ public class RecommendationRepository extends BaseRepository {
                 resultSet.getInt("target_id"), resultSet.getBigDecimal("score"), resultSet.getString("reason"),
                 resultSet.getTimestamp("created_at").toLocalDateTime());
     }
+
+    public long count() throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM recommendations");
+             ResultSet rs = statement.executeQuery()) {
+            rs.next(); return rs.getLong(1);
+        }
+    }
+
+    public java.util.Map<String, Integer> getRecommendationTypeDistribution() throws SQLException {
+        String sql = "SELECT COALESCE(NULLIF(recommendation_type,''),'Other') as rtype, COUNT(*) as cnt FROM recommendations GROUP BY COALESCE(NULLIF(recommendation_type,''),'Other') ORDER BY cnt DESC";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(friendlyType(rs.getString("rtype")), rs.getInt("cnt"));
+        }
+        return result;
+    }
+
+    private static String friendlyType(String t) {
+        if (t == null) return "Other";
+        return switch (t.toUpperCase()) {
+            case "SKILL" -> "Skill Match";
+            case "COMPANY" -> "Company Match";
+            case "TEAMMATE" -> "Teammate Match";
+            case "SAVED" -> "Saved";
+            default -> t.substring(0, 1).toUpperCase() + t.substring(1).toLowerCase();
+        };
+    }
+
+    public java.util.Map<String, Integer> getWeeklyRecommendationTrend() throws SQLException {
+        String sql = "SELECT TO_CHAR(DATE_TRUNC('week', created_at), 'Mon DD') as wk, COUNT(*) as cnt " +
+                     "FROM recommendations WHERE created_at >= CURRENT_DATE - INTERVAL '8 weeks' " +
+                     "GROUP BY DATE_TRUNC('week', created_at) ORDER BY DATE_TRUNC('week', created_at)";
+        java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) result.put(rs.getString("wk"), rs.getInt("cnt"));
+        }
+        return result;
+    }
 }
+
