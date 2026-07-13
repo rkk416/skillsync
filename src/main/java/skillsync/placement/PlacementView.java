@@ -31,8 +31,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
@@ -126,33 +125,8 @@ private Label proTipText;
         );
         bellWrap.getChildren().add(bell);
 
-        Circle avatarCircle = new Circle(20);
-        avatarCircle.setFill(Color.web(COLOR_PURPLE));
+        topBar.getChildren().addAll(titleBox, headerSpacer, searchBox, bellWrap);
 
-        Label userInitial = new Label("S");
-        userInitial.setStyle("-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:16px;");
-        StackPane avatarStack = new StackPane(avatarCircle, userInitial);
-
-        Label userName = new Label("Satish");
-        userName.setStyle("-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:" + COLOR_DARK + ";");
-
-        Label userRole = new Label("Placement Coordinator");
-        userRole.setStyle("-fx-font-size:11px; -fx-text-fill:" + COLOR_MUTED + ";");
-
-        VBox profileText = new VBox(2, userName, userRole);
-
-        HBox profile = new HBox(10, avatarStack, profileText);
-        profile.setAlignment(Pos.CENTER);
-        profile.setPadding(new Insets(4, 12, 4, 4));
-        profile.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:16;" +
-                "-fx-border-radius:16;" +
-                "-fx-border-color:" + COLOR_BORDER + ";" +
-                "-fx-border-width:1;"
-        );
-
-        topBar.getChildren().addAll(titleBox, headerSpacer, searchBox, bellWrap, profile);
 
         // ==========================
         // HERO SCORE CARD (gradient status card)
@@ -263,7 +237,7 @@ private Label proTipText;
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Resume");
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Resume Files", "*.pdf", "*.docx", "*.txt")
+                    new FileChooser.ExtensionFilter("Resume Files", "*.pdf", "*.doc", "*.docx")
             );
 
             Window window = getScene() == null ? null : getScene().getWindow();
@@ -276,8 +250,8 @@ private Label proTipText;
 
             String name = file.getName().toLowerCase();
 
-            if (!(name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".txt"))) {
-                ViewFactory.error("Supported resume formats: PDF, DOCX, TXT.");
+            if (!(name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx"))) {
+                ViewFactory.error("Only PDF, DOC and DOCX files are allowed.");
                 selectedResume[0] = null;
                 return;
             }
@@ -787,7 +761,7 @@ proTipText.setStyle(
         Region proTipSpacer = new Region();
         HBox.setHgrow(proTipSpacer, Priority.ALWAYS);
 
-       Button exploreCourses = new Button("Generate Plan");
+        Button exploreCourses = new Button("Generate Plan");
         exploreCourses.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-text-fill:" + COLOR_PRIMARY + ";" +
@@ -795,6 +769,8 @@ proTipText.setStyle(
                 "-fx-background-radius:12;" +
                 "-fx-padding:10 20;"
         );
+        exploreCourses.setOnAction(e -> skillsync.utils.NavigationManager.getInstance().navigateTo("recommendations"));
+
 
         HBox proTipCard = new HBox(16, proTipIcon, proTipTextBox, proTipSpacer, exploreCourses);
         proTipCard.setAlignment(Pos.CENTER_LEFT);

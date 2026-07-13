@@ -27,28 +27,19 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override public Map<String, Number> generateSkillStatistics() {
         try {
-            Map<String, Integer> aggregated = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            for (Skill skill : skills.findAll()) aggregated.merge(skill.getCategory() == null || skill.getCategory().isBlank() ? "Uncategorized" : skill.getCategory(), 1, Integer::sum);
-            return new LinkedHashMap<>(aggregated);
+            return new LinkedHashMap<>(skills.getSkillDistribution());
         } catch (SQLException exception) { throw new ServiceException("Unable to generate skill statistics", exception); }
     }
 
     @Override public Map<String, Number> generatePlacementStatistics() {
         try {
-            List<Student> allStudents = students.findAll();
-            List<Company> allCompanies = companies.findAll();
-            long studentCount = allStudents.size();
-            long companyCount = allCompanies.size();
-            long eligiblePairs = 0;
+            long studentCount = students.count();
+            long companyCount = companies.count();
             long totalPairs = studentCount * companyCount;
-            for (Student student : allStudents) {
-                for (Company company : allCompanies) {
-                    if (skills.findMissingForCompany(student.getId(), company.getId()).isEmpty()) eligiblePairs++;
-                }
-            }
+            long eligiblePairs = students.countEligiblePairs();
             Map<String, Number> result = new LinkedHashMap<>();
             result.put("Students", studentCount); result.put("Companies", companyCount); result.put("Eligibility Rate", totalPairs == 0 ? 0 : Math.round(eligiblePairs * 10_000.0 / totalPairs) / 100.0);
-            result.put("Teams", teams.findAll().size()); return result;
+            result.put("Teams", teams.count()); return result;
         } catch (SQLException exception) { throw new ServiceException("Unable to generate placement statistics", exception); }
     }
 }

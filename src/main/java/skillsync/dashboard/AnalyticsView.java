@@ -103,33 +103,68 @@ public final class AnalyticsView extends VBox {
 
     private PieChart pieChart(Map<String, Number> values) {
         PieChart chart = new PieChart();
-        values.forEach((name, value) -> chart.getData().add(new PieChart.Data(name, value.doubleValue())));
+        values.forEach((name, value) -> {
+            PieChart.Data data = new PieChart.Data(name, value.doubleValue());
+            chart.getData().add(data);
+            data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    javafx.scene.control.Tooltip.install(newNode, new javafx.scene.control.Tooltip(data.getName() + ": " + data.getPieValue()));
+                }
+            });
+        });
         chart.setLegendVisible(true);
-        chart.setLabelsVisible(false);
+        chart.setLabelsVisible(true);
         return chart;
     }
+
 
     private BarChart<String, Number> barChart(String title, Map<String, Number> values) {
-        BarChart<String, Number> chart = new BarChart<>(new CategoryAxis(), new NumberAxis());
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Category");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Value");
+        BarChart<String, Number> chart = new BarChart<>(xAxis, yAxis);
         chart.setTitle(title);
         chart.setLegendVisible(false);
         chart.setAnimated(false);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        values.forEach((name, value) -> series.getData().add(new XYChart.Data<>(name, value)));
+        values.forEach((name, value) -> {
+            XYChart.Data<String, Number> data = new XYChart.Data<>(name, value);
+            series.getData().add(data);
+            data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    javafx.scene.control.Tooltip.install(newNode, new javafx.scene.control.Tooltip(data.getXValue() + ": " + data.getYValue()));
+                }
+            });
+        });
         chart.getData().add(series);
         return chart;
     }
 
+
     private LineChart<String, Number> lineChart(String title, Map<String, Number> values) {
-        LineChart<String, Number> chart = new LineChart<>(new CategoryAxis(), new NumberAxis());
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Timeline");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Value");
+        LineChart<String, Number> chart = new LineChart<>(xAxis, yAxis);
         chart.setTitle(title);
         chart.setLegendVisible(false);
         chart.setAnimated(false);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        values.forEach((name, value) -> series.getData().add(new XYChart.Data<>(name, value)));
+        values.forEach((name, value) -> {
+            XYChart.Data<String, Number> data = new XYChart.Data<>(name, value);
+            series.getData().add(data);
+            data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    javafx.scene.control.Tooltip.install(newNode, new javafx.scene.control.Tooltip(data.getXValue() + ": " + data.getYValue()));
+                }
+            });
+        });
         chart.getData().add(series);
         return chart;
     }
+
 
     private record AnalyticsData(Map<String, Metric> kpis, Map<String, Number> skillDistribution,
                                  Map<String, Number> industryDistribution, Map<String, Number> placementStatistics,
