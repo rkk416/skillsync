@@ -9,4 +9,5 @@ public interface CollaborationService {
     List<Student> findTeammates(int studentId);
     Team createTeam(Team team);
     void sendRequest(int senderId, int receiverId);
+    void joinTeam(int teamId, int studentId);
 }
