@@ -51,6 +51,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     public Map<String, Number> generatePlacementStatistics() {
         try {
+    }
+
+    @Override
+    public Map<String, Number> generateSkillStatistics() {
+        try {
+            return new LinkedHashMap<>(skills.getSkillDistribution());
+        } catch (SQLException e) { throw new ServiceException("Unable to generate skill statistics", e); }
+    }
+
+    @Override
+    public Map<String, Number> generatePlacementStatistics() {
+        try {
             long studentCount = students.count();
             long companyCount = companies.count();
             long totalPairs = studentCount * companyCount;
@@ -119,5 +131,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public long countActiveCollaborationsThisWeek() {
         try { return activityLogs.countThisWeek(); }
         catch (SQLException e) { throw new ServiceException("Unable to count active collaborations", e); }
+    }
     }
 }
