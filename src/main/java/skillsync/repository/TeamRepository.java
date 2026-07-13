@@ -32,6 +32,36 @@ public class TeamRepository extends BaseRepository {
         }
     }
 
+    public static record TeamMember(String name, String role) {}
+
+    public List<TeamMember> getMemberDetails(int teamId) throws SQLException {
+        String sql = "SELECT u.full_name, tm.member_role FROM users u JOIN students s ON s.user_id = u.id JOIN team_members tm ON tm.student_id = s.id WHERE tm.team_id = ? ORDER BY s.id";
+        List<TeamMember> details = new ArrayList<>();
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, teamId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    details.add(new TeamMember(resultSet.getString("full_name"), resultSet.getString("member_role")));
+                }
+            }
+        }
+        return details;
+    }
+
+    public List<String> getMemberNames(int teamId) throws SQLException {
+        String sql = "SELECT u.full_name FROM users u JOIN students s ON s.user_id = u.id JOIN team_members tm ON tm.student_id = s.id WHERE tm.team_id = ? ORDER BY s.id";
+        List<String> names = new ArrayList<>();
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, teamId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    names.add(resultSet.getString("full_name"));
+                }
+            }
+        }
+        return names;
+    }
+
     public List<Team> findByStudentId(int studentId) throws SQLException {
         String sql = "SELECT t.id, t.name, t.description, t.created_by, t.created_at FROM teams t JOIN team_members tm ON tm.team_id = t.id WHERE tm.student_id = ? ORDER BY t.name";
         List<Team> teams = new ArrayList<>();

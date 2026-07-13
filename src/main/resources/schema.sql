@@ -113,7 +113,6 @@ CREATE TABLE recommendations (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- TODO: Keep recommendations.target_id generic for compatibility; evaluate typed target references only in a dedicated migration.
 CREATE TABLE placement_applications (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,

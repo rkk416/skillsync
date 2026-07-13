@@ -85,3 +85,13 @@ CREATE INDEX IF NOT EXISTS idx_activity_logs_student_id ON activity_logs(student
 CREATE INDEX IF NOT EXISTS idx_recommendation_history_student_id ON recommendation_history(student_id);
 
 COMMIT;
+
+BEGIN;
+ALTER TABLE students
+    ADD COLUMN IF NOT EXISTS branch VARCHAR(50);
+ALTER TABLE students
+    ADD COLUMN IF NOT EXISTS cgpa NUMERIC(4, 2) CHECK (cgpa BETWEEN 0 AND 10);
+ALTER TABLE students
+    ALTER COLUMN cgpa TYPE NUMERIC(4, 2);
+
+COMMIT;
