@@ -28,6 +28,8 @@ class AuthServiceImplTest {
         @Override public User create(User user) { user.setId(1); stored = user; return user; }
     }
     private static final class FakeStudents extends StudentRepository {
-        @Override public Student create(Student student) throws SQLException { student.setId(1); return student; }
+        private Student stored;
+        @Override public Student create(Student student) throws SQLException { student.setId(1); stored = student; return student; }
+        @Override public Optional<Student> findByUserId(int userId) { return Optional.ofNullable(stored).filter(student -> student.getUserId() == userId); }
     }
 }

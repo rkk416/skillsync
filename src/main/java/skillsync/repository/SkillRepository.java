@@ -78,19 +78,15 @@ public class SkillRepository extends BaseRepository {
         return result;
     }
 
-    // Requirements for a company: skill_id -> required proficiency
-    // NOTE: table/column names here (company_skill_requirements / required_proficiency) do not
-    // exist in schema.sql (the real table is company_requirements / minimum_proficiency). This
-    // is a Recommendation/Placement-owned concern, not part of the Profile module's CRUD paths,
-    // so it is left as-is rather than reworked here — flag it to whoever owns that service.
+    // Requirements for a company: skill_id -> minimum proficiency
     public Map<Integer, Integer> findRequirementsByCompany(int companyId) throws SQLException {
-        String sql = "SELECT skill_id, required_proficiency FROM company_skill_requirements WHERE company_id = ?";
+        String sql = "SELECT skill_id, minimum_proficiency FROM company_requirements WHERE company_id = ?";
         Map<Integer, Integer> result = new HashMap<>();
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, companyId);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    result.put(rs.getInt("skill_id"), rs.getInt("required_proficiency"));
+                    result.put(rs.getInt("skill_id"), rs.getInt("minimum_proficiency"));
                 }
             }
         }

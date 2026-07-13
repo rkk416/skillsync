@@ -20,10 +20,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CollaborationServiceImpl implements CollaborationService {
     private final StudentRepository students;
     private final TeamRepository teams;
+    private final SkillRepository skills;
+    private final StudentConnectionRepository connections;
     private final Map<Integer, Set<Integer>> pendingRequests = new ConcurrentHashMap<>();
 
-    public CollaborationServiceImpl() { this(new StudentRepository(), new TeamRepository()); }
-    public CollaborationServiceImpl(StudentRepository students, TeamRepository teams) { this.students = students; this.teams = teams; }
+    public CollaborationServiceImpl() {
+        this(new StudentRepository(), new TeamRepository(), new SkillRepository(), new StudentConnectionRepository());
+    }
+
+    public CollaborationServiceImpl(StudentRepository students, TeamRepository teams) {
+        this(students, teams, new SkillRepository(), new StudentConnectionRepository());
+    }
+
+    public CollaborationServiceImpl(StudentRepository students, TeamRepository teams, SkillRepository skills, StudentConnectionRepository connections) {
+        this.students = students;
+        this.teams = teams;
+        this.skills = skills;
+        this.connections = connections;
+    }
 
     @Override public List<Student> findTeammates(int studentId) {
         requirePositive(studentId);
