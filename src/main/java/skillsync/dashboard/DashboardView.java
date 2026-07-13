@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import skillsync.dashboard.DashboardController.DashboardOverview;
+import skillsync.service.DashboardIntelligenceService.DashboardIntelligence;
 import skillsync.utils.ViewFactory;
 
 public final class DashboardView extends VBox {
@@ -23,7 +25,8 @@ public final class DashboardView extends VBox {
         DashboardController controller = new DashboardController();
         DashboardData data = DashboardData.preview();
         try {
-            data = data.withMetrics(controller.metrics(), true);
+            DashboardOverview overview = controller.overview();
+            data = data.withMetrics(overview.metrics(), true).withIntelligence(overview.intelligence());
         } catch (RuntimeException exception) {
             ViewFactory.error(exception.getMessage());
         }
@@ -73,7 +76,7 @@ public final class DashboardView extends VBox {
         grid.setHgap(16);
         grid.setVgap(16);
         VBox activity = sectionCard("Recent Activity", "Latest movement across profile, recommendations, and team work.", data.activities);
-        VBox recommendations = sectionCard("Recommendation Preview", "Top items that deserve attention first.", data.recommendations);
+        VBox recommendations = sectionCard("Quick Insights", "Repository-driven signals that deserve attention first.", data.recommendations);
         VBox placements = sectionCard("Upcoming Placement Drives", "Recruiting events and company announcements.", data.placements);
         VBox skills = skillCard(data);
         VBox actions = quickActions();
@@ -151,6 +154,14 @@ public final class DashboardView extends VBox {
             Map<String, Metric> merged = new LinkedHashMap<>(metrics);
             liveMetrics.forEach((name, value) -> merged.put(name, new Metric(String.valueOf(value), "Loaded from the active workspace", ViewFactory.PRIMARY)));
             return new DashboardData(merged, activities, recommendations, placements, popularSkills, profileCompletion, learningProgress, recommendationSignals, live);
+        }
+
+        DashboardData withIntelligence(DashboardIntelligence intelligence) {
+            Map<String, Metric> merged = new LinkedHashMap<>(metrics);
+            intelligence.metrics().forEach((name, value) -> merged.put(name, new Metric(String.valueOf(value), "Repository-driven workspace signal", ViewFactory.PRIMARY)));
+            return new DashboardData(merged, intelligence.recentActivities(), intelligence.quickInsights(), placements,
+                    intelligence.popularSkills(), profileCompletion, learningProgress,
+                    intelligence.metrics().getOrDefault("Recommendations", recommendationSignals).intValue(), true);
         }
     }
 

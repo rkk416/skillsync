@@ -263,7 +263,7 @@ private Label proTipText;
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select Resume");
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Resume Files", "*.pdf", "*.doc", "*.docx")
+                    new FileChooser.ExtensionFilter("Resume Files", "*.pdf", "*.docx", "*.txt")
             );
 
             Window window = getScene() == null ? null : getScene().getWindow();
@@ -276,8 +276,8 @@ private Label proTipText;
 
             String name = file.getName().toLowerCase();
 
-            if (!(name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx"))) {
-                ViewFactory.error("Only PDF, DOC and DOCX files are allowed.");
+            if (!(name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".txt"))) {
+                ViewFactory.error("Supported resume formats: PDF, DOCX, TXT.");
                 selectedResume[0] = null;
                 return;
             }

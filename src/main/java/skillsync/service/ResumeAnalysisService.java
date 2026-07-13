@@ -1,5 +1,7 @@
 package skillsync.service;
 
+import skillsync.ai.ResumeTextExtractor;
+
 import java.io.File;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -10,25 +12,20 @@ import java.util.stream.Collectors;
 /**
  * Simulates an AI-powered resume analysis engine for the SkillSync platform.
  * <p>
- * This service currently derives its results from deterministic signals
- * extracted from the {@link File} itself (name, size, last-modified time)
- * rather than from parsed document content. Every method that would, in
- * production, depend on the resume's actual text is isolated behind
- * {@link #extractResumeText(File)}, so swapping in a real parser (for
- * example Apache PDFBox for {@code .pdf} files, or Apache POI for
- * {@code .doc}/{@code .docx} files) only requires replacing that single
- * method; every downstream method continues to operate on the extracted text.
+ * This service derives deterministic analysis signals from parsed resume text.
+ * The actual document parsing is delegated to {@link ResumeTextExtractor}, so
+ * PDF, DOCX and TXT support stays isolated from scoring and matching logic.
  */
 public final class ResumeAnalysisService {
 
     /** File extensions accepted for resume analysis, matched case-insensitively. */
-    private static final List<String> SUPPORTED_EXTENSIONS = List.of(".pdf", ".doc", ".docx");
+    private static final List<String> SUPPORTED_EXTENSIONS = List.of(".pdf", ".docx", ".txt");
 
     /** Maximum accepted resume file size, in bytes (5 MB). */
     private static final long MAX_FILE_SIZE_BYTES = 5L * 1024 * 1024;
 
-    /** Minimum accepted resume file size, in bytes, used to reject empty or corrupt files. */
-    private static final long MIN_FILE_SIZE_BYTES = 1024L;
+    /** Minimum accepted resume file size, in bytes, used to reject empty files. */
+    private static final long MIN_FILE_SIZE_BYTES = 1L;
 
     /** Full catalog of technical skills this service is able to recognize. */
     private static final List<String> KNOWN_SKILLS = List.of(
@@ -77,12 +74,12 @@ public final class ResumeAnalysisService {
                 .anyMatch(allowed -> allowed.equalsIgnoreCase(extension));
         if (!supported) {
             throw new ResumeAnalysisException(
-                    "Unsupported file type '" + extension + "'. Only PDF, DOC and DOCX files are allowed.");
+                    "Unsupported resume format. Supported formats: PDF, DOCX, TXT.");
         }
 
         long sizeInBytes = resumeFile.length();
         if (sizeInBytes < MIN_FILE_SIZE_BYTES) {
-            throw new ResumeAnalysisException("The resume file appears to be empty or corrupted.");
+            throw new ResumeAnalysisException("The resume file appears to be empty.");
         }
         if (sizeInBytes > MAX_FILE_SIZE_BYTES) {
             throw new ResumeAnalysisException("The resume file exceeds the maximum allowed size of 5 MB.");
@@ -251,28 +248,14 @@ public final class ResumeAnalysisService {
     /**
      * Extracts the textual content of a resume for downstream analysis.
      * <p>
-     * This implementation does not yet parse real document content; it
-     * derives a stable pseudo-text signature from file metadata so that
-     * repeated calls for the same file produce consistent results. Replace
-     * this method with real extraction logic (for example, Apache PDFBox's
-     * {@code PDFTextStripper} for PDF files) to enable genuine content-based
-     * analysis without changing any other method in this class.
+     * Delegates to the shared resume extraction subsystem so all analysis
+     * methods operate on the same parsed text used by AI analysis.
      *
      * @param resumeFile the resume file to extract text from
      * @return a deterministic pseudo-text representation of the resume
      */
     private String extractResumeText(File resumeFile) {
-        long signature = deriveSignature(resumeFile);
-        StringBuilder pseudoText = new StringBuilder();
-
-        for (String skill : KNOWN_SKILLS) {
-            long skillWeight = (signature + skill.hashCode()) % 100;
-            if (skillWeight < 62) {
-                pseudoText.append(skill).append(' ');
-            }
-        }
-
-        return pseudoText.toString();
+        return ResumeTextExtractor.extractText(resumeFile);
     }
 
     /**

@@ -17,6 +17,7 @@
         <postgresql.version>42.7.7</postgresql.version>
         <hikari.version>6.3.0</hikari.version>
         <junit.version>5.12.2</junit.version>
+        <poi.version>5.4.1</poi.version>
     </properties>
 
     <dependencies>
@@ -56,6 +57,11 @@
     <groupId>org.apache.pdfbox</groupId>
     <artifactId>pdfbox</artifactId>
     <version>3.0.5</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>${poi.version}</version>
 </dependency>
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>

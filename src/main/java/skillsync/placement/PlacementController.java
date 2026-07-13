@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public final class PlacementController {
 
     /** Allowed resume file extensions, evaluated case-insensitively. */
-    private static final List<String> ALLOWED_RESUME_EXTENSIONS = List.of(".pdf", ".doc", ".docx");
+    private static final List<String> ALLOWED_RESUME_EXTENSIONS = List.of(".pdf", ".docx", ".txt");
 
     /** Static skill requirements used until a relational skill-taxonomy table is introduced. */
     private static final Map<String, List<String>> REQUIRED_SKILLS = Map.of(
@@ -324,7 +324,7 @@ public final class PlacementController {
         boolean hasAllowedExtension = ALLOWED_RESUME_EXTENSIONS.stream().anyMatch(name::endsWith);
 
         if (!hasAllowedExtension) {
-            throw new PlacementOperationException("Only PDF, DOC and DOCX files are allowed.");
+            throw new PlacementOperationException("Supported resume formats: PDF, DOCX, TXT.");
         }
     }
 
