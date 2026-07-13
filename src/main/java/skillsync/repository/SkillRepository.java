@@ -184,7 +184,7 @@ public class SkillRepository extends BaseRepository {
     }
 
     public Map<String, Integer> getSkillDistribution() throws SQLException {
-        String sql = "SELECT COALESCE(NULLIF(category, ''), 'Uncategorized') as cat, COUNT(*) as cnt FROM skills GROUP BY COALESCE(NULLIF(category, ''), 'Uncategorized') ORDER BY cnt DESC";
+        String sql = "SELECT CASE WHEN category IN ('Programming', 'Database', 'Frontend', 'Backend', 'Cloud', 'AI / ML', 'Cybersecurity', 'DevOps', 'Mobile Development', 'Data Science', 'Other') THEN category ELSE 'Other' END as cat, COUNT(*) as cnt FROM skills GROUP BY cat ORDER BY cnt DESC";
         Map<String, Integer> result = new java.util.LinkedHashMap<>();
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {

@@ -347,7 +347,14 @@ public final class ProfileView extends VBox {
         refresh.run();
 
         TextField name = new TextField(); name.setPromptText("Skill name"); name.setPrefWidth(200); name.setPrefHeight(34); name.setStyle(FIELD_STYLE_NORMAL);
-        TextField category = new TextField(); category.setPromptText("Category"); category.setPrefWidth(200); category.setPrefHeight(34); category.setStyle(FIELD_STYLE_NORMAL);
+        javafx.scene.control.ComboBox<String> category = new javafx.scene.control.ComboBox<>();
+        category.setPromptText("Category");
+        category.setItems(javafx.collections.FXCollections.observableArrayList(
+            "Programming", "Database", "Frontend", "Backend", "Cloud", "AI / ML",
+            "Cybersecurity", "DevOps", "Mobile Development", "Data Science", "Other"
+        ));
+        category.setPrefWidth(200); category.setPrefHeight(34);
+        category.setStyle("-fx-background-color: white; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-background-radius: 8;");
 
         Button add = new Button("Add Skill"); add.setStyle(PRIMARY_BUTTON_STYLE);
         Button edit = new Button("Edit Skill"); edit.setDisable(true);
@@ -359,21 +366,24 @@ public final class ProfileView extends VBox {
             boolean hasSelection = value != null;
             edit.setDisable(!hasSelection);
             delete.setDisable(!hasSelection);
-            if (hasSelection) { name.setText(value.getName()); category.setText(value.getCategory()); }
+            if (hasSelection) {
+                name.setText(value.getName());
+                category.setValue(value.getCategory());
+            }
         });
 
         add.setOnAction(event -> {
-            if (controller.addSkill(name.getText(), category.getText())) {
-                name.clear(); category.clear(); table.getSelectionModel().clearSelection(); refresh.run();
+            if (controller.addSkill(name.getText(), category.getValue())) {
+                name.clear(); category.getSelectionModel().clearSelection(); category.setValue(null); table.getSelectionModel().clearSelection(); refresh.run();
             }
         });
         edit.setOnAction(event -> {
             Skill selected = table.getSelectionModel().getSelectedItem();
             if (selected == null) return;
             String previousName = selected.getName(); String previousCategory = selected.getCategory();
-            selected.setName(name.getText()); selected.setCategory(category.getText());
+            selected.setName(name.getText()); selected.setCategory(category.getValue());
             if (controller.updateSkill(selected)) {
-                name.clear(); category.clear(); table.getSelectionModel().clearSelection(); refresh.run();
+                name.clear(); category.getSelectionModel().clearSelection(); category.setValue(null); table.getSelectionModel().clearSelection(); refresh.run();
             } else {
                 selected.setName(previousName); selected.setCategory(previousCategory);
             }

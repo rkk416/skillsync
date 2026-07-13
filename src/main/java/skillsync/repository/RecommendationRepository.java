@@ -70,7 +70,7 @@ public class RecommendationRepository extends BaseRepository {
     }
 
     public java.util.Map<String, Integer> getRecommendationTypeDistribution() throws SQLException {
-        String sql = "SELECT COALESCE(NULLIF(recommendation_type,''),'Other') as rtype, COUNT(*) as cnt FROM recommendations GROUP BY COALESCE(NULLIF(recommendation_type,''),'Other') ORDER BY cnt DESC";
+        String sql = "SELECT CASE WHEN recommendation_type IN ('SKILL', 'COMPANY', 'TEAMMATE') THEN recommendation_type ELSE 'Other' END as rtype, COUNT(*) as cnt FROM recommendations GROUP BY rtype ORDER BY cnt DESC";
         java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);

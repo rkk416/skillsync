@@ -89,7 +89,7 @@ public class PlacementApplicationRepository extends BaseRepository {
     }
 
     public java.util.Map<String, Integer> getPlacementStatusDistribution() throws SQLException {
-        String sql = "SELECT COALESCE(NULLIF(status,''),'Unknown') as s, COUNT(*) as cnt FROM placement_applications GROUP BY COALESCE(NULLIF(status,''),'Unknown') ORDER BY cnt DESC";
+        String sql = "SELECT CASE WHEN status IN ('APPLIED', 'SHORTLISTED', 'REJECTED', 'SELECTED', 'WITHDRAWN') THEN status ELSE 'APPLIED' END as s, COUNT(*) as cnt FROM placement_applications GROUP BY s ORDER BY cnt DESC";
         java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);

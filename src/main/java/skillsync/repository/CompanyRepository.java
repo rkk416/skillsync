@@ -62,7 +62,7 @@ public class CompanyRepository extends BaseRepository {
     }
 
     public java.util.Map<String, Integer> getIndustryDistribution() throws SQLException {
-        String sql = "SELECT COALESCE(NULLIF(industry, ''), 'Unspecified') as ind, COUNT(*) as cnt FROM companies GROUP BY COALESCE(NULLIF(industry, ''), 'Unspecified') ORDER BY cnt DESC";
+        String sql = "SELECT CASE WHEN industry IN ('Software', 'Finance', 'Healthcare', 'Education', 'Consulting', 'Cloud', 'Manufacturing', 'Data Science', 'Other') THEN industry ELSE 'Other' END as ind, COUNT(*) as cnt FROM companies GROUP BY ind ORDER BY cnt DESC";
         java.util.Map<String, Integer> result = new java.util.LinkedHashMap<>();
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {

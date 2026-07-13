@@ -27,7 +27,7 @@ CREATE TABLE students (
 CREATE TABLE skills (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    category VARCHAR(100),
+    category VARCHAR(100) CHECK (category IN ('Programming', 'Database', 'Frontend', 'Backend', 'Cloud', 'AI / ML', 'Cybersecurity', 'DevOps', 'Mobile Development', 'Data Science', 'Other')),
     description VARCHAR(500),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

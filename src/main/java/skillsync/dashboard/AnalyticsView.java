@@ -343,6 +343,7 @@ public final class AnalyticsView extends VBox {
             List<String> activeTeams,
             List<String> insights,
             boolean live) {
+
         static AnalyticsData preview() {
             Map<String, Metric> kpis = new LinkedHashMap<>();
             kpis.put("Total Students",  new Metric("128",  "Registered student profiles",          ViewFactory.PRIMARY));
