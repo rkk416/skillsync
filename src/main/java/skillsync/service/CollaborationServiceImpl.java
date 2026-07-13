@@ -20,9 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CollaborationServiceImpl implements CollaborationService {
     private final StudentRepository students;
     private final TeamRepository teams;
-    private final SkillRepository skills = new SkillRepository();
-    private final StudentConnectionRepository connections = new StudentConnectionRepository();
-    // TODO: Move collaboration requests to StudentConnectionRepository or TeamJoinRequestRepository when the service contract supports persistent workflows.
     private final Map<Integer, Set<Integer>> pendingRequests = new ConcurrentHashMap<>();
 
     public CollaborationServiceImpl() { this(new StudentRepository(), new TeamRepository()); }
