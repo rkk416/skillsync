@@ -4,20 +4,88 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import skillsync.utils.ViewFactory;
 
 public final class RegisterView extends VBox {
+    private static final String ACCENT = "#1D6FE0";
+    private static final String ACCENT_TINT = "#E6F1FB";
+    private static final String TEXT_PRIMARY = "#0C2A47";
+    private static final String TEXT_SECONDARY = "#5B6B7D";
+    private static final String FIELD_STYLE =
+            "-fx-background-color: #F8FBFF; -fx-background-radius: 8; -fx-border-radius: 8; "
+                    + "-fx-border-color: #DCE7F5; -fx-border-width: 1; -fx-text-fill: " + TEXT_PRIMARY + "; -fx-padding: 10 12;";
+    private static final String PRIMARY_BUTTON_STYLE =
+            "-fx-background-color: " + ACCENT + "; -fx-text-fill: white; -fx-background-radius: 9; -fx-padding: 12 0; -fx-font-weight: bold; -fx-font-size: 14px;";
+
     public RegisterView() {
         RegisterController controller = new RegisterController();
-        setAlignment(Pos.CENTER); setSpacing(14); setPadding(new Insets(40)); setStyle("-fx-background-color: #F8FAFC; -fx-font-family: 'Segoe UI';");
-        TextField username = new TextField(); username.setPromptText("Username"); username.setMaxWidth(360);
-        TextField email = new TextField(); email.setPromptText("Email"); email.setMaxWidth(360);
-        PasswordField password = new PasswordField(); password.setPromptText("Password (8+ characters)"); password.setMaxWidth(360);
-        Button register = ViewFactory.primaryButton("Register"); register.setDefaultButton(true); register.setOnAction(event -> controller.register(username.getText(), email.getText(), password.getText()));
-        Hyperlink login = new Hyperlink("Back to login"); login.setOnAction(event -> controller.showLogin());
-        getChildren().addAll(ViewFactory.title("Create your account"), username, email, password, register, login);
+        setAlignment(Pos.CENTER);
+        setStyle("-fx-background-color: #F0F7FF;");
+
+        StackPane badge = new StackPane(new Label("\u2795"));
+        badge.setPrefSize(52, 52);
+        badge.setMaxSize(52, 52);
+        badge.setStyle("-fx-background-color: " + ACCENT_TINT + "; -fx-background-radius: 14;");
+
+        Label brand = new Label("SkillSync");
+        brand.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: " + ACCENT + ";");
+
+        Label subtitle = new Label("Create your account to get started");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: " + TEXT_SECONDARY + ";");
+
+        VBox header = new VBox(8, badge, brand, subtitle);
+        header.setAlignment(Pos.CENTER);
+        header.setPadding(new Insets(0, 0, 24, 0));
+
+        Label usernameLabel = new Label("Username");
+        usernameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + TEXT_SECONDARY + ";");
+        TextField username = new TextField();
+        username.setPromptText("your_username");
+        username.setPrefWidth(320);
+        username.setPrefHeight(38);
+        username.setStyle(FIELD_STYLE);
+
+        Label emailLabel = new Label("Email");
+        emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + TEXT_SECONDARY + ";");
+        TextField email = new TextField();
+        email.setPromptText("name@college.edu");
+        email.setPrefWidth(320);
+        email.setPrefHeight(38);
+        email.setStyle(FIELD_STYLE);
+
+        Label passwordLabel = new Label("Password");
+        passwordLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + TEXT_SECONDARY + ";");
+        PasswordField password = new PasswordField();
+        password.setPromptText("At least 8 characters");
+        password.setPrefWidth(320);
+        password.setPrefHeight(38);
+        password.setStyle(FIELD_STYLE);
+
+        Button register = new Button("Create account");
+        register.setDefaultButton(true);
+        register.setPrefWidth(320);
+        register.setStyle(PRIMARY_BUTTON_STYLE);
+        register.setOnAction(event -> controller.register(username.getText(), email.getText(), password.getText()));
+
+        Hyperlink login = new Hyperlink("Already have an account? Sign in");
+        login.setStyle("-fx-text-fill: " + ACCENT + "; -fx-font-size: 12px;");
+        login.setOnAction(event -> controller.showLogin());
+
+        VBox form = new VBox(6, usernameLabel, username, emailLabel, email, passwordLabel, password);
+        form.setPadding(new Insets(0, 0, 20, 0));
+
+        VBox card = new VBox(0, header, form, register, login);
+        card.setSpacing(10);
+        card.setAlignment(Pos.CENTER);
+        card.setMaxWidth(380);
+        card.setPadding(new Insets(36, 32, 32, 32));
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 16;");
+        VBox.setMargin(register, new Insets(4, 0, 4, 0));
+
+        getChildren().add(card);
     }
 }

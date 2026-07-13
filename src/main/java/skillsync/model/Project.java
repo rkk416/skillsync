@@ -10,11 +10,12 @@ public class Project {
     private String repositoryUrl;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String technologyStack;
 
     public Project() { }
-    public Project(int id, int ownerStudentId, String name, String description, String repositoryUrl, LocalDate startDate, LocalDate endDate) {
+    public Project(int id, int ownerStudentId, String name, String description, String repositoryUrl, LocalDate startDate, LocalDate endDate, String technologyStack) {
         this.id = id; this.ownerStudentId = ownerStudentId; this.name = name; this.description = description;
-        this.repositoryUrl = repositoryUrl; this.startDate = startDate; this.endDate = endDate;
+        this.repositoryUrl = repositoryUrl; this.startDate = startDate; this.endDate = endDate; this.technologyStack = technologyStack;
     }
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -30,5 +31,7 @@ public class Project {
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
-    @Override public String toString() { return "Project{id=" + id + ", ownerStudentId=" + ownerStudentId + ", name='" + name + "', description='" + description + "', repositoryUrl='" + repositoryUrl + "', startDate=" + startDate + ", endDate=" + endDate + "}"; }
+    public String getTechnologyStack() { return technologyStack; }
+    public void setTechnologyStack(String technologyStack) { this.technologyStack = technologyStack; }
+    @Override public String toString() { return "Project{id=" + id + ", ownerStudentId=" + ownerStudentId + ", name='" + name + "', description='" + description + "', repositoryUrl='" + repositoryUrl + "', startDate=" + startDate + ", endDate=" + endDate + ", technologyStack='" + technologyStack + "'}"; }
 }

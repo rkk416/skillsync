@@ -14,7 +14,7 @@ ALTER TABLE teams ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT
 ALTER TABLE recommendations ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE projects
 ADD COLUMN IF NOT EXISTS technology_stack VARCHAR(500);
-
+-- TODO: Keep recommendations.target_id generic for compatibility; evaluate typed target references only in a dedicated migration.
 CREATE TABLE IF NOT EXISTS placement_applications (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,

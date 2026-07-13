@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ProjectRepository extends BaseRepository {
     public Project create(Project project) throws SQLException {
-        String sql = "INSERT INTO projects (owner_student_id, name, description, repository_url, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO projects (owner_student_id, name, description, repository_url, start_date, end_date, technology_stack) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             bind(statement, project); statement.executeUpdate();
             try (ResultSet keys = statement.getGeneratedKeys()) { if (keys.next()) project.setId(keys.getInt(1)); }
@@ -23,7 +23,7 @@ public class ProjectRepository extends BaseRepository {
     }
 
     public Optional<Project> findById(int id) throws SQLException {
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, owner_student_id, name, description, repository_url, start_date, end_date FROM projects WHERE id = ?")) {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, owner_student_id, name, description, repository_url, start_date, end_date, technology_stack FROM projects WHERE id = ?")) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) { return resultSet.next() ? Optional.of(map(resultSet)) : Optional.empty(); }
         }
@@ -31,16 +31,16 @@ public class ProjectRepository extends BaseRepository {
 
     public List<Project> findAll() throws SQLException {
         List<Project> projects = new ArrayList<>();
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, owner_student_id, name, description, repository_url, start_date, end_date FROM projects ORDER BY id"); ResultSet resultSet = statement.executeQuery()) {
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT id, owner_student_id, name, description, repository_url, start_date, end_date, technology_stack FROM projects ORDER BY id"); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) projects.add(map(resultSet));
         }
         return projects;
     }
 
     public boolean update(Project project) throws SQLException {
-        String sql = "UPDATE projects SET owner_student_id = ?, name = ?, description = ?, repository_url = ?, start_date = ?, end_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE projects SET owner_student_id = ?, name = ?, description = ?, repository_url = ?, start_date = ?, end_date = ?, technology_stack = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            bind(statement, project); statement.setInt(7, project.getId()); return statement.executeUpdate() == 1;
+            bind(statement, project); statement.setInt(8, project.getId()); return statement.executeUpdate() == 1;
         }
     }
 
@@ -53,12 +53,14 @@ public class ProjectRepository extends BaseRepository {
     private void bind(PreparedStatement statement, Project value) throws SQLException {
         statement.setInt(1, value.getOwnerStudentId()); statement.setString(2, value.getName()); statement.setString(3, value.getDescription());
         statement.setString(4, value.getRepositoryUrl()); statement.setObject(5, value.getStartDate()); statement.setObject(6, value.getEndDate());
+        statement.setString(7, value.getTechnologyStack());
     }
 
     private Project map(ResultSet resultSet) throws SQLException {
         Date startDate = resultSet.getDate("start_date"); Date endDate = resultSet.getDate("end_date");
         return new Project(resultSet.getInt("id"), resultSet.getInt("owner_student_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getString("repository_url"),
-                startDate == null ? null : startDate.toLocalDate(), endDate == null ? null : endDate.toLocalDate());
+                startDate == null ? null : startDate.toLocalDate(), endDate == null ? null : endDate.toLocalDate(),
+                resultSet.getString("technology_stack"));
     }
 }
