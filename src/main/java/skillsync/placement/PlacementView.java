@@ -728,6 +728,21 @@ resultBox.setPadding(new Insets(10, 5, 5, 10));
                 companyResult, eligibilityResult, scoreResult, gpaResult, skillGapResult, recommendationResult
         );
 
+        Button applyBtn = ViewFactory.primaryButton("\uD83D\uDCE4 Apply for Placement");
+        applyBtn.setDisable(true);
+        applyBtn.setStyle(
+                "-fx-background-color:#16A34A;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:12;" +
+                "-fx-padding:12 28;"
+        );
+
+        VBox eligibilityCard = new VBox(18);
+        eligibilityCard.setStyle(CARD_STYLE);
+        eligibilityCard.setPadding(new Insets(22));
+        eligibilityCard.getChildren().addAll(eligibilityHeading, resultBox, applyBtn);
+
         // ==========================
         // PRO TIP CARD
         // ==========================
@@ -881,9 +896,36 @@ updateStatValue(
                         "-fx-background-radius:12;"
                 );
 
-              
+                analyze.setOnAction(evt -> {
+                    try {
+                        PlacementController.CompanyMatchResult result = controller.analyzeCompany(company.getId());
+                        companyResult.setText("\uD83C\uDFE2 Company : " + company.getName());
+                        boolean eligible = result.isEligible();
+                        eligibilityResult.setText(eligible ? "\u2705 Eligibility : Eligible" : "\u274C Eligibility : Not Eligible");
+                        eligibilityResult.setStyle("-fx-font-size:17px; -fx-font-weight:bold; -fx-text-fill:" + (eligible ? "#16A34A" : "#DC2626") + ";");
+                        scoreResult.setText("\u2B50 Placement Score : " + String.format("%.1f", controller.score()));
+                        gpaResult.setText("\uD83C\uDF93 Minimum GPA : " + company.getMinimumGpa());
+                        String missing = result.getMissingSkills().isEmpty() ? "None" :
+                                result.getMissingSkills().stream().map(skillsync.model.Skill::getName).collect(java.util.stream.Collectors.joining(", "));
+                        skillGapResult.setText("\uD83E\uDDE0 Missing Skills : " + missing);
+                        recommendationResult.setText(eligible
+                                ? "\uD83D\uDCA1 Recommendation : You meet the requirements! Apply now."
+                                : "\uD83D\uDCA1 Recommendation : Improve skills in " + missing + " to become eligible.");
+                        applyBtn.setDisable(false);
+                        applyBtn.setOnAction(applyEvt -> {
+                            boolean applied = controller.applyForPlacement(company.getId(), company.getName(), controller.score());
+                            if (applied) {
+                                applyBtn.setText("\u2714 Applied!");
+                                applyBtn.setDisable(true);
+                                recommendationResult.setText("\uD83D\uDCA1 Application submitted. Track it in your dashboard.");
+                            }
+                        });
+                    } catch (Exception ex) {
+                        ViewFactory.error("Could not analyze company: " + ex.getMessage());
+                    }
+                });
 
-               HBox row = new HBox(20, details);
+               HBox row = new HBox(20, details, rowSpacer, analyze);
                HBox.setHgrow(details, Priority.ALWAYS);
                 row.setAlignment(Pos.CENTER_LEFT);
                 row.setPadding(new Insets(18));
@@ -925,6 +967,7 @@ updateStatValue(
     resumeCard,
     scoreCard,
     companyCard,
+    eligibilityCard,
     proTipCard
 );
 

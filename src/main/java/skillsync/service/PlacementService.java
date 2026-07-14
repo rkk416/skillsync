@@ -8,4 +8,5 @@ public interface PlacementService {
     double calculatePlacementScore(int studentId);
     List<Skill> findSkillGap(int studentId, int companyId);
     boolean checkEligibility(int studentId, int companyId);
+    boolean applyForPlacement(int studentId, int companyId, String status, double score);
 }

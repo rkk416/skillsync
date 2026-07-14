@@ -99,6 +99,23 @@ public class PlacementApplicationRepository extends BaseRepository {
         return result;
     }
 
+    public double getPlacementSuccessRate() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM placement_applications WHERE status = 'SELECTED'";
+        String sqlTotal = "SELECT COUNT(*) FROM placement_applications";
+        try (Connection connection = getConnection();
+             PreparedStatement stmtSelected = connection.prepareStatement(sql);
+             PreparedStatement stmtTotal = connection.prepareStatement(sqlTotal);
+             ResultSet rsSel = stmtSelected.executeQuery();
+             ResultSet rsTotal = stmtTotal.executeQuery()) {
+            rsSel.next();
+            rsTotal.next();
+            long selected = rsSel.getLong(1);
+            long total = rsTotal.getLong(1);
+            if (total == 0) return 0.0;
+            return Math.round((selected * 100.0 / total) * 10.0) / 10.0;
+        }
+    }
+
     private static String titleCase(String s) {
         if (s == null || s.isEmpty()) return s;
         return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();

@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
  * no direct scene-graph manipulation; it exposes plain data and result objects
  * that the view layer binds to its own controls.
  */
-public final class PlacementController {
+public final class PlacementController extends skillsync.utils.ControllerSupport {
 
     /** Allowed resume file extensions, evaluated case-insensitively. */
-    private static final List<String> ALLOWED_RESUME_EXTENSIONS = List.of(".pdf", ".docx", ".txt");
+    private static final List<String> ALLOWED_RESUME_EXTENSIONS = List.of(".pdf", ".doc", ".docx");
 
     /** Static skill requirements used until a relational skill-taxonomy table is introduced. */
     private static final Map<String, List<String>> REQUIRED_SKILLS = Map.of(
@@ -324,7 +324,7 @@ public final class PlacementController {
         boolean hasAllowedExtension = ALLOWED_RESUME_EXTENSIONS.stream().anyMatch(name::endsWith);
 
         if (!hasAllowedExtension) {
-            throw new PlacementOperationException("Supported resume formats: PDF, DOCX, TXT.");
+            throw new PlacementOperationException("Only PDF, DOC and DOCX files are allowed.");
         }
     }
 
@@ -377,6 +377,25 @@ public final class PlacementController {
         } catch (PlacementOperationException ex) {
             return false;
         }
+    }
+
+    /**
+     * Submits a placement application for the current student to the given company.
+     * Logs the action to activity_logs for Analytics tracking.
+     *
+     * @param companyId   target company id
+     * @param companyName display name (for activity log)
+     * @param score       current placement score
+     * @return true if the application was recorded successfully
+     */
+    public boolean applyForPlacement(int companyId, String companyName, double score) {
+        boolean ok = executeBoolean(() ->
+                new skillsync.service.PlacementServiceImpl()
+                        .applyForPlacement(currentStudentId(), companyId, "APPLIED", score));
+        if (ok) {
+            logActivity("PLACEMENT_APPLICATION", "Applied to company: " + companyName);
+        }
+        return ok;
     }
 
     /**

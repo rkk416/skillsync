@@ -120,4 +120,30 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         try { return activityLogs.countThisWeek(); }
         catch (SQLException e) { throw new ServiceException("Unable to count active collaborations", e); }
     }
+
+    @Override
+    public Map<String, Number> generatePlacementStatusDistribution() {
+        try {
+            Map<String, Integer> raw = applications.getPlacementStatusDistribution();
+            return new LinkedHashMap<>(raw);
+        } catch (SQLException e) { throw new ServiceException("Unable to generate placement status distribution", e); }
+    }
+
+    @Override
+    public double countPlacementSuccessRate() {
+        try { return applications.getPlacementSuccessRate(); }
+        catch (SQLException e) { throw new ServiceException("Unable to get placement success rate", e); }
+    }
+
+    @Override
+    public long countActiveTeams() {
+        try { return teams.count(); }
+        catch (SQLException e) { throw new ServiceException("Unable to count teams", e); }
+    }
+
+    @Override
+    public java.util.List<String> getTopCompanyNames() {
+        try { return companies.getTopCompanyNames(5); }
+        catch (SQLException e) { throw new ServiceException("Unable to get top company names", e); }
+    }
 }

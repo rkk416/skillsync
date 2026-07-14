@@ -70,5 +70,18 @@ public class CompanyRepository extends BaseRepository {
         }
         return result;
     }
+
+    public java.util.List<String> getTopCompanyNames(int limit) throws SQLException {
+        String sql = "SELECT name FROM companies ORDER BY name LIMIT ?";
+        java.util.List<String> names = new java.util.ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, limit);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) names.add(rs.getString("name"));
+            }
+        }
+        return names;
+    }
 }
 

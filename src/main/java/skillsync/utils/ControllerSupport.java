@@ -33,4 +33,15 @@ public abstract class ControllerSupport {
             return false;
         }
     }
+
+    /** Write an entry to activity_logs. Silently swallows any DB failure so it never disrupts UI. */
+    protected void logActivity(String type, String description) {
+        try {
+            int studentId = currentStudentId();
+            skillsync.model.ActivityLog entry = new skillsync.model.ActivityLog(0, studentId, type, description, null);
+            new skillsync.repository.ActivityLogRepository().create(entry);
+        } catch (Exception ex) {
+            LOGGER.log(Level.FINE, "Activity log write failed (non-critical): " + ex.getMessage(), ex);
+        }
+    }
 }

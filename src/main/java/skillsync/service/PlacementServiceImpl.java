@@ -44,5 +44,32 @@ public class PlacementServiceImpl implements PlacementService {
     }
 
     @Override public boolean checkEligibility(int studentId, int companyId) { return findSkillGap(studentId, companyId).isEmpty(); }
+
+    @Override
+    public boolean applyForPlacement(int studentId, int companyId, String status, double score) {
+        requirePositive(studentId);
+        requirePositive(companyId);
+        try {
+            skillsync.repository.PlacementApplicationRepository appRepo = new skillsync.repository.PlacementApplicationRepository();
+            // Delete existing application if there is one to allow re-applying/updating status
+            try {
+                java.util.List<skillsync.model.PlacementApplication> existing = appRepo.findByStudentId(studentId);
+                for (var app : existing) {
+                    if (app.getCompanyId() == companyId) {
+                        appRepo.deleteById(app.getId());
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            skillsync.model.PlacementApplication app = new skillsync.model.PlacementApplication(
+                0, studentId, companyId, status, java.math.BigDecimal.valueOf(score), null, null, null
+            );
+            appRepo.create(app);
+            return true;
+        } catch (SQLException exception) {
+            throw new ServiceException("Unable to apply for placement", exception);
+        }
+    }
+
     private void requirePositive(int value) { if (value <= 0) throw new IllegalArgumentException("Identifier must be positive"); }
 }
