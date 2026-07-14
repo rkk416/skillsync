@@ -211,7 +211,12 @@ public final class ViewFactory {
         addNav(sidebar, "Collaboration", "collaboration", activeTitle);
         addNav(sidebar, "Recommendations", "recommendations", activeTitle);
         addNav(sidebar, "Analytics", "analytics", activeTitle);
-        sidebar.getChildren().addAll(spacerV(), secondaryButton("Logout"));
+        Button logoutBtn = secondaryButton("Logout");
+        logoutBtn.setOnAction(e -> {
+            new skillsync.service.AuthServiceImpl().logoutUser();
+            NavigationManager.getInstance().navigateTo("login");
+        });
+        sidebar.getChildren().addAll(spacerV(), logoutBtn);
         return sidebar;
     }
 
@@ -219,7 +224,30 @@ public final class ViewFactory {
         TextField search = searchField("Search SkillSync");
         search.setMaxWidth(280);
         Button notification = secondaryButton("Alerts");
+        notification.setOnAction(e -> {
+            try {
+                int userId = SessionManager.getCurrentUser().map(skillsync.model.User::getId).orElse(0);
+                if (userId > 0) {
+                    int studentId = new skillsync.repository.StudentRepository().findByUserId(userId).map(skillsync.model.Student::getId).orElse(0);
+                    if (studentId > 0) {
+                        long pendingCount = new skillsync.repository.StudentConnectionRepository().findByStudentId(studentId).stream()
+                                .filter(c -> "PENDING".equalsIgnoreCase(c.getStatus())).count();
+                        String message = pendingCount > 0 
+                                ? "You have " + pendingCount + " pending connection requests. Go to the Collaboration module to manage them."
+                                : "No new alerts. Your network is up to date!";
+                        info(message);
+                    } else {
+                        info("No new alerts.");
+                    }
+                } else {
+                    info("No new alerts.");
+                }
+            } catch (Exception ex) {
+                info("No new alerts.");
+            }
+        });
         Button profile = secondaryButton("Profile");
+        profile.setOnAction(e -> NavigationManager.getInstance().navigateTo("profile"));
         HBox bar = new HBox(14, title(title), spacer(), search, notification, profile);
         bar.setAlignment(Pos.CENTER_LEFT);
         return bar;
