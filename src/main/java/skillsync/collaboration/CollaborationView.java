@@ -96,7 +96,7 @@ public final class CollaborationView extends VBox {
         lastRefreshedLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-opacity: 0.7;");
         titleArea.getChildren().addAll(subtitle, lastRefreshedLabel);
         
-        Button refreshBtn = new Button("ðŸ”„ Refresh Data");
+        Button refreshBtn = new Button("Refresh Data");
         refreshBtn.setStyle("-fx-background-color: linear-gradient(to right, #2563EB, #2563EB); -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
         Tooltip.install(refreshBtn, new Tooltip("Refresh all statistics, project teams, and student recommendations"));
         
@@ -132,11 +132,11 @@ public final class CollaborationView extends VBox {
         HBox statsBar = new HBox(12);
         statsBar.setStyle("-fx-alignment: CENTER;");
         statsBar.getChildren().addAll(
-            createStatCard("Active Teams", activeTeamsStat, "#2563EB", "Total in platform", "ðŸ‘¥"),
-            createStatCard("My Teams", myTeamsStat, "#2563EB", "Created or joined", "ðŸ‘‘"),
-            createStatCard("Available Peers", studentsAvailableStat, "#22C55E", "Network candidates", "ðŸŽ“"),
-            createStatCard("Recommended", recTeammatesStat, "#F59E0B", "Best matches (BFS)", "âœ¨"),
-            createStatCard("Pending Requests", pendingRequestsStat, "#EF4444", "Connections pending", "ðŸ“©")
+            createStatCard("Active Teams", activeTeamsStat, "#2563EB", "Total in platform", ""),
+            createStatCard("My Teams", myTeamsStat, "#2563EB", "Created or joined", ""),
+            createStatCard("Available Peers", studentsAvailableStat, "#22C55E", "Network candidates", ""),
+            createStatCard("Recommended", recTeammatesStat, "#F59E0B", "Best matches (BFS)", ""),
+            createStatCard("Pending Requests", pendingRequestsStat, "#EF4444", "Connections pending", "")
         );
 
         statsBar.setMaxWidth(Double.MAX_VALUE);
@@ -183,19 +183,19 @@ public final class CollaborationView extends VBox {
                 charCounter.setText(len + " / 30 characters");
                 if (len == 0) {
                     charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #9CA3AF;");
-                    nameValidationLabel.setText("âš ï¸ Team name is required.");
+                    nameValidationLabel.setText("Team name is required.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #f59e0b; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
                 } else if (len > 30) {
                     charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #ef4444; -fx-font-weight: bold;");
-                    nameValidationLabel.setText("âŒ Exceeds maximum 30 character limit.");
+                    nameValidationLabel.setText("Exceeds maximum 30 character limit.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #ef4444; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
                 } else {
                     charCounter.setStyle("-fx-font-size: 10px; -fx-text-fill: #10b981; -fx-font-weight: bold;");
-                    nameValidationLabel.setText("âœ“ Team name is valid.");
+                    nameValidationLabel.setText("Team name is valid.");
                     nameValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #10b981; -fx-font-weight: bold;");
                     nameValidationLabel.setVisible(true);
                     nameValidationLabel.setManaged(true);
@@ -221,12 +221,12 @@ public final class CollaborationView extends VBox {
             if (newVal != null) {
                 int len = newVal.trim().length();
                 if (len == 0) {
-                    domainValidationLabel.setText("âš ï¸ Project domain description is required.");
+                    domainValidationLabel.setText("Project domain description is required.");
                     domainValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #f59e0b; -fx-font-weight: bold;");
                     domainValidationLabel.setVisible(true);
                     domainValidationLabel.setManaged(true);
                 } else {
-                    domainValidationLabel.setText("âœ“ Description is valid.");
+                    domainValidationLabel.setText("Description is valid.");
                     domainValidationLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #22C55E; -fx-font-weight: bold;");
                     domainValidationLabel.setVisible(true);
                     domainValidationLabel.setManaged(true);
@@ -234,7 +234,7 @@ public final class CollaborationView extends VBox {
             }
         });
 
-        Label domainHelper = new Label("â€¢ Or select one of these popular suggested domains:");
+        Label domainHelper = new Label("Or select one of these popular suggested domains:");
         domainHelper.setStyle("-fx-font-size: 11px; -fx-text-fill: #9CA3AF; -fx-font-style: italic;");
         
         // Interactive suggestion chips
@@ -297,7 +297,7 @@ public final class CollaborationView extends VBox {
                 nameValidationLabel.setManaged(false);
                 domainValidationLabel.setVisible(false);
                 domainValidationLabel.setManaged(false);
-                showNotification("ðŸŽ‰ Project Team '" + name.trim() + "' created successfully!", false);
+                showNotification("Project Team '" + name.trim() + "' created successfully!", false);
                 refresh();
             } catch (RuntimeException e) {
                 ViewFactory.error(e.getMessage());
@@ -319,7 +319,7 @@ public final class CollaborationView extends VBox {
         
         HBox teamsHeaderBox = new HBox(8);
         teamsHeaderBox.setStyle("-fx-alignment: CENTER_LEFT;");
-        Label teamsTitle = new Label("ðŸ‘¥ Active Teams");
+        Label teamsTitle = new Label("Active Teams");
         teamsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Region teamsHeaderSpacer = new Region();
@@ -330,7 +330,7 @@ public final class CollaborationView extends VBox {
 
         // Search & Sorting & Filtering controls Row
         HBox teamControlRow = new HBox(8);
-        searchTeamsField.setPromptText("ðŸ” Search teams by name or domain...");
+        searchTeamsField.setPromptText("Search teams by name or domain...");
         styleTextField(searchTeamsField);
         searchTeamsField.textProperty().addListener((observable, oldValue, newValue) -> applyTeamFilteringAndSorting());
         
@@ -376,7 +376,7 @@ public final class CollaborationView extends VBox {
                     // Premium Smooth Hover Lift and DropShadow Transition
                     applyCardHoverAnimation(card, borderCol);
 
-                    Label nameLabel = new Label("ðŸ‘¥ " + team.getName());
+                    Label nameLabel = new Label(team.getName());
                     nameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                     
                     Label domainLabel = new Label("Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General" : team.getDescription()));
@@ -477,7 +477,7 @@ public final class CollaborationView extends VBox {
                     viewBtn.setOnAction(event -> showTeamDetailsDialog(team));
                     
                     // Quick Clipboard action
-                    Button copyBtn = new Button("ðŸ“‹ Copy ID");
+                    Button copyBtn = new Button("Copy ID");
                     copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #9CA3AF; -fx-font-size: 11px; -fx-padding: 6 10; -fx-cursor: hand; -fx-min-height: 32;");
                     copyBtn.setOnAction(e -> {
                         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -522,7 +522,7 @@ public final class CollaborationView extends VBox {
         recCard.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 16; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         VBox.setVgrow(recCard, Priority.ALWAYS);
         
-        Label recTitle = new Label("â­ Recommended Teammates");
+        Label recTitle = new Label("Recommended Teammates");
         recTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
 
         suggestionsList.setPrefHeight(180);
@@ -651,17 +651,16 @@ public final class CollaborationView extends VBox {
         // Initialize a highly illustrative, informative Empty State card for Recommended Teammates
         emptyRecsContainer.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 20; -fx-background-radius: 12; -fx-border-color: #E5E7EB; -fx-border-width: 1.5; -fx-border-style: dashed; -fx-alignment: CENTER;");
         
-        Label emptyIcon = new Label("ðŸ’¡");
+        Label emptyIcon = new Label("");
         emptyIcon.setStyle("-fx-font-size: 32px;");
         
         Label emptyTitle = new Label("Unlock Teammate Recommendations");
         emptyTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Label emptyDesc = new Label(
-            "We use advanced match analysis (Jaccard Similarity and Network Paths) to match you with peers. Try these active steps:\n\n" +
-            "â€¢ Add skills to your profile (e.g. Java, Python, SQL)\n" +
-            "â€¢ Create or join active teams in the list\n" +
-            "â€¢ Send connections to other students in Discovery"
+            "- Add skills to your profile (e.g. Java, Python, SQL)\n" +
+            "- Create or join active teams in the list\n" +
+            "- Send connections to other students in Discovery"
         );
         emptyDesc.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-line-spacing: 4; -fx-text-alignment: CENTER;");
         emptyDesc.setWrapText(true);
@@ -682,7 +681,7 @@ public final class CollaborationView extends VBox {
         
         HBox discoveryHeaderBox = new HBox(8);
         discoveryHeaderBox.setStyle("-fx-alignment: CENTER_LEFT;");
-        Label discoveryTitle = new Label("ðŸ” Student Discovery");
+        Label discoveryTitle = new Label("Student Discovery");
         discoveryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         Region discoveryHeaderSpacer = new Region();
@@ -693,7 +692,7 @@ public final class CollaborationView extends VBox {
 
         // Discovery Search & Sort & Filter controls row
         HBox discoveryControlRow = new HBox(8);
-        searchDiscoveryField.setPromptText("ðŸ” Search students by name, university, degree, or skill...");
+        searchDiscoveryField.setPromptText("Search students by name, university, degree, or skill...");
         styleTextField(searchDiscoveryField);
         searchDiscoveryField.textProperty().addListener((observable, oldValue, newValue) -> applyStudentFilteringAndSorting());
         
@@ -760,7 +759,7 @@ public final class CollaborationView extends VBox {
 
                     nameRow.getChildren().addAll(avatarLabel, nameLabel, nameRowSpacer, copyStudentIdBtn);
                     
-                    Label degreeLabel = new Label("ðŸŽ“ Degree: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
+                    Label degreeLabel = new Label("Degree: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
                     degreeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
                     
                     Label universityLabel = new Label("University: " + (suggestion.student().getUniversity() == null || suggestion.student().getUniversity().isBlank() ? "N/A" : suggestion.student().getUniversity()));
@@ -887,7 +886,7 @@ public final class CollaborationView extends VBox {
     private void rebuildInsightsCard() {
         insightsCard.getChildren().clear();
         
-        Label insightsTitle = new Label("ðŸ“Š Collaboration Insights");
+        Label insightsTitle = new Label("Collaboration Insights");
         insightsTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #14B8A6;");
         
         Label insightsDesc = new Label("Dynamic network analytics aggregated from across the SkillSync peer database.");
@@ -912,7 +911,7 @@ public final class CollaborationView extends VBox {
             
             if (!sortedSkills.isEmpty()) {
                 VBox skillsBox = new VBox(4);
-                Label skillLabel = new Label("ðŸ”¥ Most Requested Skills (Click to Filter):");
+                Label skillLabel = new Label("Most Requested Skills (Click to Filter):");
                 skillLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                 
                 FlowPane skillsChips = new FlowPane(4, 4);
@@ -947,7 +946,7 @@ public final class CollaborationView extends VBox {
             
             if (!sortedDomains.isEmpty()) {
                 VBox domainsBox = new VBox(4);
-                Label domainLabel = new Label("ðŸš€ Trending Project Domains (Click to Search):");
+                Label domainLabel = new Label("Trending Project Domains (Click to Search):");
                 domainLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #6B7280;");
                 
                 FlowPane domainChips = new FlowPane(4, 4);
@@ -968,7 +967,7 @@ public final class CollaborationView extends VBox {
         }
 
         // 3. Jaccard similarity brief guide
-        Label similarityLabel = new Label("ðŸ’¡ How recommendations work: We map previous student collaborations (BFS) and calculate skill matches (Jaccard coefficient) to recommend ideal capstone team matches.");
+        Label similarityLabel = new Label("How recommendations work: We map previous student collaborations (BFS) and calculate skill matches (Jaccard coefficient) to recommend ideal capstone team matches.");
         similarityLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #9CA3AF; -fx-line-spacing: 2.5;");
         similarityLabel.setWrapText(true);
         insightsCard.getChildren().add(similarityLabel);
@@ -986,7 +985,12 @@ public final class CollaborationView extends VBox {
         HBox topRow = new HBox(6);
         topRow.setStyle("-fx-alignment: CENTER_LEFT;");
         Label iconLabel = new Label(iconSymbol);
-        iconLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #6B7280;");
+        if (iconSymbol == null || iconSymbol.isEmpty()) {
+            iconLabel.setVisible(false);
+            iconLabel.setManaged(false);
+        } else {
+            iconLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #6B7280;");
+        }
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;");
         titleLabel.setWrapText(true);
@@ -1316,7 +1320,7 @@ public final class CollaborationView extends VBox {
         
         User u = controller.getStudentUser(suggestion.student().getId());
         String email = (u != null) ? u.getEmail() : (suggestion.name().toLowerCase().replace(" ", ".") + "@skillsync.edu");
-        Label emailLabel = new Label("ðŸ“§ " + email);
+        Label emailLabel = new Label("Email: " + email);
         emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6B7280;");
         
         Button copyEmailBtn = new Button("Copy");
@@ -1341,19 +1345,19 @@ public final class CollaborationView extends VBox {
         Label universityLabel = new Label("University: " + (suggestion.student().getUniversity() == null || suggestion.student().getUniversity().isBlank() ? "N/A" : suggestion.student().getUniversity()));
         universityLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label degreeLabel = new Label("ðŸŽ“ Degree / Branch: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
+        Label degreeLabel = new Label("Degree / Branch: " + (suggestion.student().getDegree() == null || suggestion.student().getDegree().isBlank() ? "N/A" : suggestion.student().getDegree()));
         degreeLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label gradLabel = new Label("ðŸ“… Graduation Year: " + (suggestion.student().getGraduationYear() == 0 ? "N/A" : String.valueOf(suggestion.student().getGraduationYear())));
+        Label gradLabel = new Label("Graduation Year: " + (suggestion.student().getGraduationYear() == 0 ? "N/A" : String.valueOf(suggestion.student().getGraduationYear())));
         gradLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         
-        Label bioLabel = new Label("ðŸ“ Biography: " + (suggestion.student().getBio() == null || suggestion.student().getBio().isBlank() ? "No bio provided." : suggestion.student().getBio()));
+        Label bioLabel = new Label("Biography: " + (suggestion.student().getBio() == null || suggestion.student().getBio().isBlank() ? "No bio provided." : suggestion.student().getBio()));
         bioLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6B7280;");
         bioLabel.setWrapText(true);
         
         detailsCard.getChildren().addAll(universityLabel, degreeLabel, gradLabel, bioLabel);
         
-        Label skillsHeader = new Label("ðŸ’ª Professional Skills Portfolio");
+        Label skillsHeader = new Label("Professional Skills Portfolio");
         skillsHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2563EB;");
         
         FlowPane skillsFlow = new FlowPane();
@@ -1398,7 +1402,7 @@ public final class CollaborationView extends VBox {
         HBox headerRow = new HBox(12);
         headerRow.setStyle("-fx-alignment: CENTER_LEFT;");
         
-        Label teamIcon = new Label("ðŸ‘¥");
+        Label teamIcon = new Label("T");
         teamIcon.setStyle("-fx-font-size: 24px; -fx-background-color: #F8FAFC; -fx-text-fill: #2563EB; -fx-alignment: CENTER; -fx-pref-width: 44; -fx-pref-height: 44; -fx-background-radius: 8; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 8;");
         
         VBox nameOwnerBox = new VBox(4);
@@ -1406,7 +1410,7 @@ public final class CollaborationView extends VBox {
         nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111827;");
         
         String creatorName = controller.getStudentName(team.getCreatedBy());
-        Label creatorLabel = new Label("ðŸ‘‘ Project Lead: " + creatorName);
+        Label creatorLabel = new Label("Project Lead: " + creatorName);
         creatorLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6B7280;");
         
         nameOwnerBox.getChildren().addAll(nameLabel, creatorLabel);
@@ -1415,10 +1419,10 @@ public final class CollaborationView extends VBox {
         VBox detailsCard = new VBox(10);
         detailsCard.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: #E5E7EB; -fx-border-width: 1;");
         
-        Label domainLabel = new Label("ðŸŒ Project Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General Project" : team.getDescription()));
+        Label domainLabel = new Label("Project Domain: " + (team.getDescription() == null || team.getDescription().isBlank() ? "General Project" : team.getDescription()));
         domainLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #14B8A6; -fx-font-weight: bold;");
         
-        Button copyIdBtn = new Button("ðŸ“‹ Copy Team ID: " + team.getId());
+        Button copyIdBtn = new Button("Copy Team ID: " + team.getId());
         copyIdBtn.setStyle("-fx-background-color: #F8FAFC; -fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-size: 11px; -fx-text-fill: #6B7280; -fx-padding: 3 8; -fx-cursor: hand; -fx-font-weight: bold;");
         copyIdBtn.setOnAction(e -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -1430,7 +1434,7 @@ public final class CollaborationView extends VBox {
         
         detailsCard.getChildren().addAll(domainLabel, copyIdBtn);
         
-        Label membersHeader = new Label("ðŸ‘¥ Project Team Members");
+        Label membersHeader = new Label("Project Team Members");
         membersHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2563EB;");
         
         VBox membersListVBox = new VBox(6);
@@ -1444,7 +1448,7 @@ public final class CollaborationView extends VBox {
                 HBox memberRow = new HBox(8);
                 memberRow.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4 8; -fx-background-color: #F8FAFC; -fx-background-radius: 6; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1; -fx-border-radius: 6;");
                 
-                Label bullet = new Label("â€¢");
+                Label bullet = new Label("-");
                 bullet.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: bold;");
                 
                 Label nameItem = new Label(m.name());
@@ -1503,12 +1507,12 @@ public final class CollaborationView extends VBox {
             // Handle recommended list (empty state layout)
             List<CollaborationController.StudentSuggestion> recs = controller.getTeammateSuggestions();
             if (recs.isEmpty()) {
-                recCard.getChildren().setAll(new Label("â­ Recommended Teammates") {{
+                recCard.getChildren().setAll(new Label("Recommended Teammates") {{
                     setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                 }}, emptyRecsContainer);
             } else {
                 suggestionsList.setItems(FXCollections.observableArrayList(recs));
-                recCard.getChildren().setAll(new Label("â­ Recommended Teammates") {{
+                recCard.getChildren().setAll(new Label("Recommended Teammates") {{
                     setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827;");
                 }}, suggestionsList);
             }
